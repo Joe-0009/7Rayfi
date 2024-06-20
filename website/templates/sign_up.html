@@ -4,52 +4,25 @@
 
 {% block content %}
 <form method="POST">
+    {{ form.hidden_tag() }}
     <h3 align="center">Sign Up</h3>
     <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="Enter email"
-            required
-        />
+        {{ form.email.label }}
+        {{ form.email(class="form-control") }}
     </div>
     <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input
-            type="text"
-            class="form-control"
-            id="firstName"
-            name="firstName"
-            placeholder="Enter first name"
-            required
-        />
+        {{ form.first_name.label }}
+        {{ form.first_name(class="form-control") }}
     </div>
     <div class="form-group">
-        <label for="password1">Password</label>
-        <input
-            type="password"
-            class="form-control"
-            id="password1"
-            name="password1"
-            placeholder="Enter password"
-            required
-        />
+        {{ form.password1.label }}
+        {{ form.password1(class="form-control") }}
     </div>
     <div class="form-group">
-        <label for="password2">Password (Confirm)</label>
-        <input
-            type="password"
-            class="form-control"
-            id="password2"
-            name="password2"
-            placeholder="Confirm password"
-            required
-        />
+        {{ form.password2.label }}
+        {{ form.password2(class="form-control") }}
     </div>
     <br />
-    <button type="submit" class="btn btn-primary">Submit</button>
+    {{ form.submit(class="btn btn-primary") }}
 </form>
 {% endblock %}

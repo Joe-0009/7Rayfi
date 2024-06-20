@@ -1,17 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
+from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 
 db = SQLAlchemy()
-DB_NAME = "database.db"
-
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     db.init_app(app)
+    csrf.init_app(app)
 
     from .views import views
     from .auth import auth
