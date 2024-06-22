@@ -3,24 +3,21 @@
 {% block content %}
 <div class="container mt-4">
     <!-- Profile Header -->
-    <div class="row mb-4">
-        <div class="text-center">
-            {% if user.profile_picture %}
-                <img src="{{ url_for('static', filename='profile_pics/' ~ user.profile_picture) }}" alt="Profile Picture" class="img-thumbnail" style="max-width: 200px;">
-            {% else %}
-                <img src="{{ url_for('static', filename='profile_pics/default.png') }}" alt="Default Profile Picture" class="img-thumbnail" style="max-width: 200px;">
-            {% endif %}
-        </div>
-        <div class="col-md-9">
-            <h2>{{ user.first_name or "First Name" }} {{ user.last_name or "Last Name" }}</h2>
-            {% if user.location %}
-                <p>{{ user.location }}</p>
-            {% endif %}
-        </div>
+    <div class="text-center mb-4">
+        {% if user.profile_picture %}
+            <img src="{{ url_for('static', filename='profile_pics/' + user.profile_picture) }}" alt="Profile Picture" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
+        {% else %}
+            <img src="{{ url_for('static', filename='profile_pics/default.png') }}" alt="Default Profile Picture" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
+        {% endif %}
+        <h2 class="mt-3">{{ user.first_name or "First Name" }} {{ user.last_name or "Last Name" }}</h2>
+        <p class="text-muted"><i class="fa fa-envelope"></i> {{ user.email }}</p>
+        {% if user.location %}
+            <p class="text-muted"><i class="fa fa-map-marker"></i> {{ user.location }}</p>
+        {% endif %}
     </div>
-    
+
     <!-- Profile Navigation Tabs -->
-    <ul class="nav nav-tabs" id="profileTab" role="tablist">
+    <ul class="nav nav-tabs justify-content-center" id="profileTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Profile Overview</a>
         </li>
@@ -31,116 +28,144 @@
             <a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews</a>
         </li>
     </ul>
-    
-    <div class="tab-content" id="profileTabContent">
+
+    <div class="tab-content mt-4" id="profileTabContent">
         <!-- Profile Overview Tab -->
         <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <h5>Basic Information</h5>
-                    <p>Name: {{ user.first_name or "" }} {{ user.last_name or "" }}</p>
-                    <p>Username: {{ user.username }}</p>
-                    <p>Email: {{ user.email }}</p>
-                    {% if user.phone %}
-                        <p>Phone: {{ user.phone }}</p>
-                    {% endif %}
-                    {% if user.location %}
-                        <p>Location: {{ user.location }}</p>
-                    {% endif %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Basic Information</h5>
+                            <p class="card-text"><strong>Name:</strong> {{ user.first_name or "" }} {{ user.last_name or "" }}</p>
+                            <p class="card-text"><strong>Username:</strong> {{ user.username or "Not Provided" }}</p>
+                            {% if user.phone %}
+                                <p class="card-text"><strong>Phone:</strong> {{ user.phone }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h5>About Me</h5>
-                    <p>{{ user.about_me or "Not Provided" }}</p>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <h5>Skills</h5>
-                    <ul>
-                        {% for skill in user.skills %}
-                            <li>{{ skill.name }}</li>
-                        {% endfor %}
-                        {% if not user.skills %}
-                            <li>No skills provided</li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <h5>Experience</h5>
-                    <ul>
-                        {% for experience in user.experiences %}
-                            <li>{{ experience.title }} at {{ experience.company }} ({{ experience.duration }})</li>
-                        {% endfor %}
-                        {% if not user.experiences %}
-                            <li>No experience provided</li>
-                        {% endif %}
-                    </ul>
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">About Me</h5>
+                            <p class="card-text">{{ user.about_me or "Not Provided" }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <h5>Certifications</h5>
-                    <ul>
-                        {% for certification in user.certifications %}
-                            <li>{{ certification.name }}</li>
-                        {% endfor %}
-                        {% if not user.certifications %}
-                            <li>No certifications provided</li>
-                        {% endif %}
-                    </ul>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Skills</h5>
+                            <ul class="list-unstyled">
+                                {% for skill in skills %}
+                                    <li>{{ skill.name }}</li>
+                                {% endfor %}
+                                {% if not skills %}
+                                    <li>No skills provided</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Experience</h5>
+                            <ul class="list-unstyled">
+                                {% for experience in experiences %}
+                                    <li>{{ experience.title }} at {{ experience.company }} ({{ experience.duration }})</li>
+                                {% endfor %}
+                                {% if not experiences %}
+                                    <li>No experience provided</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Certifications</h5>
+                            <ul class="list-unstyled">
+                                {% for certification in certifications %}
+                                    <li>{{ certification.name }}</li>
+                                {% endfor %}
+                                {% if not certifications %}
+                                    <li>No certifications provided</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- My Jobs Tab -->
         <div class="tab-pane fade" id="jobs" role="tabpanel" aria-labelledby="jobs-tab">
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <h5>Posted Jobs</h5>
-                    <ul>
-                        {% for job in user.posted_jobs %}
-                            <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
-                        {% endfor %}
-                        {% if not user.posted_jobs %}
-                            <li>No jobs posted</li>
-                        {% endif %}
-                    </ul>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Posted Jobs</h5>
+                            <ul class="list-unstyled">
+                                {% for job in posted_jobs %}
+                                    <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
+                                {% endfor %}
+                                {% if not posted_jobs %}
+                                    <li>No jobs posted</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <h5>Applied Jobs</h5>
-                    <ul>
-                        {% for job in user.applied_jobs %}
-                            <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
-                        {% endfor %}
-                        {% if not user.applied_jobs %}
-                            <li>No jobs applied for</li>
-                        {% endif %}
-                    </ul>
+                <div class="col-md-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Applied Jobs</h5>
+                            <ul class="list-unstyled">
+                                {% for job in applied_jobs %}
+                                    <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
+                                {% endfor %}
+                                {% if not applied_jobs %}
+                                    <li>No jobs applied for</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Reviews Tab -->
         <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <h5>Average Rating</h5>
-                    <p>{{ user.average_rating }} stars</p>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Average Rating</h5>
+                            <p class="card-text">{{ average_rating or "No reviews available" }} stars</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <h5>Reviews</h5>
-                    <ul>
-                        {% for review in user.reviews %}
-                            <li>{{ review.reviewer.first_name }} {{ review.reviewer.last_name }} - {{ review.rating }} stars - {{ review.date }}<br>{{ review.comment }}</li>
-                        {% endfor %}
-                        {% if not user.reviews %}
-                            <li>No reviews available</li>
-                        {% endif %}
-                    </ul>
+                <div class="col-md-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Reviews</h5>
+                            <ul class="list-unstyled">
+                                {% for review in reviews %}
+                                    <li>{{ review.reviewer.first_name }} {{ review.reviewer.last_name }} - {{ review.rating }} stars - {{ review.date }}<br>{{ review.comment }}</li>
+                                {% endfor %}
+                                {% if not reviews %}
+                                    <li>No reviews available</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
