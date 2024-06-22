@@ -37,16 +37,20 @@ def sign_up():
     form = RegistrationForm()
     if form.validate_on_submit():
         email = form.email.data
-        first_name = form.first_name.data
+        username = form.username.data
         password1 = form.password1.data
-
-        hashed_password = generate_password_hash(password1, method='pbkdf2:sha256')
-        new_user = User(email=email, first_name=first_name, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user, remember=True)
-        flash('Account created!', category='success')
-        return redirect(url_for('views.home'))
+        password2 = form.password2.data
+        
+        if password1 != password2:
+            flash('Passwords do not match. Please try again.', category='error')
+        else:
+            hashed_password = generate_password_hash(password1, method='pbkdf2:sha256')
+            new_user = User(email=email, username=username, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user, remember=True)
+            flash('Account created!', category='success')
+            return redirect(url_for('views.home'))
         
 
     return render_template("sign_up.html", user=current_user, form=form)
