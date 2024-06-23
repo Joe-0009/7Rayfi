@@ -33,7 +33,7 @@ class UpdateProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    location = StringField('Location')
+    location = SelectField('Location', choices=[('Casablanca', 'Casablanca'), ('Rabat', 'Rabat'), ('Marrakech', 'Marrakech'), ('Kenitra', 'Kenitra'), ('Fes', 'Fes')], validators=[DataRequired()])
     profession = SelectField('Profession', choices=[('Electrician', 'Electrician'), ('Barber', 'Barber'), ('Tailor', 'Tailor'), ('Plumber', 'Plumber')], validators=[DataRequired()])
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d')
     about_me = TextAreaField('About Me')
