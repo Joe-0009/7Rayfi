@@ -1,0 +1,6 @@
+/* Add any custom styles for the profile page here */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}

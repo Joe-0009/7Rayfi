@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Search Workers{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Search Workers</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.location.label }}
+            {{ form.location(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.profession.label }}
+            {{ form.profession(class="form-control") }}
+        </div>
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    {% if results %}
+    <h3 class="mt-4">Results</h3>
+    <ul class="list-group">
+        {% for user in results %}
+        <li class="list-group-item">
+            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+            <p><strong>Profession:</strong> {{ user.profession }}</p>
+            <p><strong>Location:</strong> {{ user.location }}</p>
+            <p><strong>About:</strong> {{ user.about_me }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

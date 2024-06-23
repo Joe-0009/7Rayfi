@@ -1,0 +1,36 @@
+/* Add any custom styles for the view jobs page here */
+.list-group-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+/* Add custom styles for the view jobs page */
+.container {
+    max-width: 800px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+.list-group-item {
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.list-group-item h5 {
+    color: #007bff;
+}
+
+.list-group-item p {
+    margin-bottom: 10px;
+}
+
+.list-group-item small {
+    color: #6c757d;
+}
