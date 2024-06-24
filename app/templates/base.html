@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/workers.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job.css') }}"> <!-- Add this line -->    
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg ">
         <a class="navbar-brand" href="{{ url_for('home.index') }}">7Rayfi</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
             <span class="navbar-toggler-icon"></span>
@@ -19,7 +21,7 @@
             <div class="navbar-nav">
                 {% if current_user.is_authenticated %}
                     <a class="nav-item nav-link" href="{{ url_for('home.index') }}">Home</a>
-                    <a class="nav-item nav-link" href="{{ url_for('profile.view_profile') }}">Profile</a>
+                    <a class="nav-item nav-link" href="{{ url_for('profile.view_profile', user_id=current_user.id) }}">Profile</a>
                     <a class="nav-item nav-link" href="{{ url_for('job.post_job') }}">Post Job</a>
                     <a class="nav-item nav-link" href="{{ url_for('job.view_jobs') }}">View Jobs</a>
                     <a class="nav-item nav-link" href="{{ url_for('profile.update_profile') }}">Edit Profile</a>

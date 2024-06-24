@@ -3,33 +3,39 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="text-center">Search Workers</h2>
-    <form method="POST">
+    <form method="POST" class="mt-4">
         {{ form.hidden_tag() }}
         <div class="form-group">
-            {{ form.location.label }}
+            {{ form.location.label(class="form-label") }}
             {{ form.location(class="form-control") }}
         </div>
         <div class="form-group">
-            {{ form.profession.label }}
+            {{ form.profession.label(class="form-label") }}
             {{ form.profession(class="form-control") }}
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
-
     {% if results %}
-    <h3 class="mt-4">Results</h3>
-    <ul class="list-group">
-        {% for user in results %}
-        <li class="list-group-item">
-            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-            <p><strong>Profession:</strong> {{ user.profession }}</p>
-            <p><strong>Location:</strong> {{ user.location }}</p>
-            <p><strong>About:</strong> {{ user.about_me }}</p>
-        </li>
+    <div class="list-group mt-4">
+        {% for worker in results %}
+        <a href="{{ url_for('profile.view_profile', user_id=worker.id) }}" class="list-group-item list-group-item-action">
+            <div class="d-flex align-items-center">
+                {% if worker.profile_picture %}
+                <img src="{{ url_for('static', filename='profile_pics/' + worker.profile_picture) }}" alt="Profile Picture" class="rounded-circle img-thumbnail" style="width: 50px; height: 50px; margin-right: 15px;">
+                {% else %}
+                <img src="{{ url_for('static', filename='profile_pics/default.png') }}" alt="Default Profile Picture" class="rounded-circle img-thumbnail" style="width: 50px; height: 50px; margin-right: 15px;">
+                {% endif %}
+                <div>
+                    <h5 class="mb-1">{{ worker.first_name }} {{ worker.last_name }}</h5>
+                    <p class="mb-1">{{ worker.profession }}</p>
+                    <small>{{ worker.location }}</small>
+                </div>
+            </div>
+        </a>
         {% endfor %}
-    </ul>
+    </div>
     {% endif %}
 </div>
 {% endblock %}

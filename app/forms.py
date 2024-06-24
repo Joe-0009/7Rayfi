@@ -1,6 +1,6 @@
 # forms.py
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, DateField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, DateField, MultipleFileField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from .models import User
 from flask_wtf.file import FileAllowed
@@ -44,6 +44,9 @@ class UpdateProfileForm(FlaskForm):
 class JobForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired(), Length(min=2, max=100)])
     description = TextAreaField('Job Description', validators=[DataRequired(), Length(min=10)])
+    profession = SelectField('Profession', choices=[('Electrician', 'Electrician'), ('Barber', 'Barber'), ('Tailor', 'Tailor'), ('Plumber', 'Plumber')], validators=[DataRequired()])
+    location = SelectField('Location', choices=[('Casablanca', 'Casablanca'), ('Rabat', 'Rabat'), ('Marrakech', 'Marrakech'), ('Kenitra', 'Kenitra'), ('Fes', 'Fes')], validators=[DataRequired()])
+    pictures = MultipleFileField('Job Pictures', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField('Post Job')
     
     

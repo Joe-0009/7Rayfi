@@ -4,21 +4,21 @@
 <div class="container mt-4">
     <!-- Profile Header -->
     <div class="text-center mb-4">
-        {% if user.profile_picture %}
-            <img src="{{ url_for('static', filename='profile_pics/' + user.profile_picture) }}" alt="Profile Picture" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
+        {% if profile_user.profile_picture %}
+            <img src="{{ url_for('static', filename='profile_pics/' + profile_user.profile_picture) }}" alt="Profile Picture" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
         {% else %}
             <img src="{{ url_for('static', filename='profile_pics/default.png') }}" alt="Default Profile Picture" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
         {% endif %}
-        <h2 class="mt-3">{{ user.first_name or "First Name" }} {{ user.last_name or "Last Name" }}</h2>
-        <p class="text-muted"><i class="fa fa-envelope"></i> {{ user.email }}</p>
-        {% if user.location %}
-            <p class="text-muted"><i class="fa fa-map-marker"></i> {{ user.location }}</p>
+        <h2 class="mt-3">{{ profile_user.first_name or "First Name" }} {{ profile_user.last_name or "Last Name" }}</h2>
+        <p class="text-muted"><i class="fa fa-envelope"></i> {{ profile_user.email }}</p>
+        {% if profile_user.location %}
+            <p class="text-muted"><i class="fa fa-map-marker"></i> {{ profile_user.location }}</p>
         {% endif %}
-        {% if user.profession %}
-            <p class="text-muted"><i class="fa fa-briefcase"></i> {{ user.profession }}</p>
+        {% if profile_user.profession %}
+            <p class="text-muted"><i class="fa fa-briefcase"></i> {{ profile_user.profession }}</p>
         {% endif %}
-        {% if user.date_of_birth %}
-            <p class="text-muted"><i class="fa fa-birthday-cake"></i> Age: {{ user.age }}</p>
+        {% if profile_user.date_of_birth %}
+            <p class="text-muted"><i class="fa fa-birthday-cake"></i> Age: {{ profile_user.age }}</p>
         {% endif %}
     </div>
 
@@ -43,10 +43,10 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Basic Information</h5>
-                            <p class="card-text"><strong>Name:</strong> {{ user.first_name or "" }} {{ user.last_name or "" }}</p>
-                            <p class="card-text"><strong>Username:</strong> {{ user.username or "Not Provided" }}</p>
-                            {% if user.phone %}
-                                <p class="card-text"><strong>Phone:</strong> {{ user.phone }}</p>
+                            <p class="card-text"><strong>Name:</strong> {{ profile_user.first_name or "" }} {{ profile_user.last_name or "" }}</p>
+                            <p class="card-text"><strong>Username:</strong> {{ profile_user.username or "Not Provided" }}</p>
+                            {% if profile_user.phone %}
+                                <p class="card-text"><strong>Phone:</strong> {{ profile_user.phone }}</p>
                             {% endif %}
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">About Me</h5>
-                            <p class="card-text">{{ user.about_me or "Not Provided" }}</p>
+                            <p class="card-text">{{ profile_user.about_me or "Not Provided" }}</p>
                         </div>
                     </div>
                 </div>
@@ -73,6 +73,7 @@
                                     <li>No skills provided</li>
                                 {% endif %}
                             </ul>
+                            {% if profile_user.id == current_user.id %}
                             <a href="#" id="add-skill-link" class="btn btn-link">+ Add Skill</a>
                             <div id="add-skill-form" style="display: none;">
                                 <form method="POST" action="{{ url_for('profile.add_skill') }}">
@@ -85,6 +86,7 @@
                                     </div>
                                 </form>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -100,6 +102,7 @@
                                     <li>No experience provided</li>
                                 {% endif %}
                             </ul>
+                            {% if profile_user.id == current_user.id %}
                             <a href="#" id="add-experience-link" class="btn btn-link">+ Add Experience</a>
                             <div id="add-experience-form" style="display: none;">
                                 <form method="POST" action="{{ url_for('profile.add_experience') }}">
@@ -112,6 +115,7 @@
                                     </div>
                                 </form>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

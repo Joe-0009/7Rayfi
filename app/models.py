@@ -54,14 +54,19 @@ class Certification(db.Model):
     name = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     description = db.Column(db.Text)
+    profession = db.Column(db.String(50))
+    location = db.Column(db.String(100))
+    pictures = db.Column(db.String(500))  # Store picture filenames as comma-separated string
     status = db.Column(db.String(50))
     date_posted = db.Column(db.Date, default=func.now())
     poster_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     applied_by = db.relationship('User', secondary='job_application', backref='applied_jobs')
+
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)

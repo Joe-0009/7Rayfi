@@ -9,22 +9,24 @@ from sqlalchemy.sql import func
 
 profile = Blueprint('profile', __name__)
 
-@profile.route('/profile')
+
+@profile.route('/profile/<int:user_id>')
 @login_required
-def view_profile():
-    user = User.query.get(current_user.id)
-    skills = Skill.query.filter_by(user_id=user.id).all()
-    experiences = Experience.query.filter_by(user_id=user.id).all()
-    certifications = Certification.query.filter_by(user_id=user.id).all()
-    posted_jobs = Job.query.filter_by(poster_id=user.id).all()
-    applied_jobs = user.applied_jobs
-    reviews = Review.query.filter_by(reviewee_id=user.id).all()
-    average_rating = db.session.query(func.avg(Review.rating)).filter_by(reviewee_id=user.id).scalar()
+def view_profile(user_id):
+    profile_user = User.query.get_or_404(user_id)
+    skills = profile_user.skills
+    experiences = profile_user.experiences
+    certifications = profile_user.certifications
+    posted_jobs = profile_user.posted_jobs
+    applied_jobs = profile_user.applied_jobs
+    reviews = profile_user.reviews_received
+    average_rating = db.session.query(func.avg(Review.rating)).filter_by(reviewee_id=user_id).scalar()
 
     add_skill_form = AddSkillForm()
     add_experience_form = AddExperienceForm()
+
     return render_template('profile/profile.html', 
-                           user=user, 
+                           profile_user=profile_user, 
                            skills=skills, 
                            experiences=experiences, 
                            certifications=certifications, 
@@ -83,7 +85,7 @@ def add_skill():
         flash('Skill added successfully!', 'success')
     else:
         flash('Failed to add skill. Please try again.', 'error')
-    return redirect(url_for('profile.view_profile'))
+    return redirect(url_for('profile.view_profile', user_id=current_user.id))
 
 @profile.route('/add-experience', methods=['POST'])
 @login_required
