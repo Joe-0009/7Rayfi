@@ -65,3 +65,6 @@ class AddExperienceForm(FlaskForm):
     
 class DummyForm(FlaskForm):
     submit = SubmitField('Delete')
+    
+class DummyForm(FlaskForm):
+    pass

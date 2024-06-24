@@ -4,14 +4,29 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Posted Jobs</h5>
-                    <ul class="list-unstyled">
+                    <div class="list-group">
                         {% for job in posted_jobs %}
-                            <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
+                        <div class="list-group-item">
+                            <h5 class="mb-1">{{ job.title }}</h5>
+                            <p class="mb-1">{{ job.description }}</p>
+                            <small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }} on {{ job.date_posted }}</small>
+                            <div>
+                                {% if job.pictures %}
+                                {% for picture in job.pictures.split(',') %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="mt-2">
+                                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
                         {% endfor %}
                         {% if not posted_jobs %}
-                            <li>No jobs posted</li>
+                        <li class="list-group-item">No jobs posted</li>
                         {% endif %}
-                    </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -21,10 +36,10 @@
                     <h5 class="card-title">Applied Jobs</h5>
                     <ul class="list-unstyled">
                         {% for job in applied_jobs %}
-                            <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
+                        <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
                         {% endfor %}
                         {% if not applied_jobs %}
-                            <li>No jobs applied for</li>
+                        <li>No jobs applied for</li>
                         {% endif %}
                     </ul>
                 </div>
@@ -32,4 +47,3 @@
         </div>
     </div>
 </div>
-``

@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app as app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-from ..forms import UpdateProfileForm, AddSkillForm, AddExperienceForm
+from ..forms import UpdateProfileForm, AddSkillForm, AddExperienceForm, DummyForm
 from ..models import User, Skill, Experience, Certification, Job, Review
 from .. import db
 from sqlalchemy.sql import func
@@ -24,6 +24,7 @@ def view_profile(user_id):
 
     add_skill_form = AddSkillForm()
     add_experience_form = AddExperienceForm()
+    dummy_form = DummyForm()
 
     return render_template('profile/profile.html', 
                            profile_user=profile_user, 
@@ -35,7 +36,8 @@ def view_profile(user_id):
                            reviews=reviews, 
                            average_rating=average_rating,
                            add_skill_form=add_skill_form,
-                           add_experience_form=add_experience_form)
+                           add_experience_form=add_experience_form,
+                           form=dummy_form) # Dummy form for CSRF token
 
 @profile.route('/update-profile', methods=['GET', 'POST'])
 @login_required
