@@ -1,0 +1,27 @@
+<div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average Rating</h5>
+                    <p class="card-text">{{ average_rating or "No reviews available" }} stars</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reviews</h5>
+                    <ul class="list-unstyled">
+                        {% for review in reviews %}
+                            <li>{{ review.reviewer.first_name }} {{ review.reviewer.last_name }} - {{ review.rating }} stars - {{ review.date }}<br>{{ review.comment }}</li>
+                        {% endfor %}
+                        {% if not reviews %}
+                            <li>No reviews available</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,6 +14,7 @@ def create_app():
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/profile_pics')
+    app.config['UPLOAD_FOLDER2'] = os.path.join(app.root_path, 'static/uploads')
     
     db.init_app(app)
     csrf.init_app(app)
@@ -23,7 +24,6 @@ def create_app():
     from app.routes.home import home
     from app.routes.profile import profile
     from app.routes.job import job
-    from app.routes.worker import worker
     from app.routes.worker import worker
      
     app.register_blueprint(auth, url_prefix='/auth')

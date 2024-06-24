@@ -63,7 +63,7 @@ class Job(db.Model):
     location = db.Column(db.String(100))
     pictures = db.Column(db.String(500))  # Store picture filenames as comma-separated string
     status = db.Column(db.String(50))
-    date_posted = db.Column(db.Date, default=func.now())
+    date_posted = db.Column(db.DateTime(timezone=True), default=func.now())
     poster_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     applied_by = db.relationship('User', secondary='job_application', backref='applied_jobs')
 
@@ -74,7 +74,7 @@ class Review(db.Model):
     reviewee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     rating = db.Column(db.Integer)
     comment = db.Column(db.Text)
-    date = db.Column(db.Date, default=func.now())
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
 
 job_application = db.Table('job_application',
     db.Column('job_id', db.Integer, db.ForeignKey('job.id'), primary_key=True),

@@ -3,20 +3,24 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="text-center">Available Jobs</h2>
-    <div class="list-group">
+    <div class="list-group mt-4">
         {% for job in jobs %}
         <div class="list-group-item">
             <h5 class="mb-1">{{ job.title }}</h5>
             <p class="mb-1">{{ job.description }}</p>
-            <p class="mb-1"><strong>Profession:</strong> {{ job.profession }}</p>
-            <p class="mb-1"><strong>Location:</strong> {{ job.location }}</p>
-            <small>Posted on {{ job.date_posted.strftime('%Y-%m-%d %H:%M:%S') }} by {{ job.poster.username }}</small>
-            {% if job.pictures %}
-            <div class="mt-2">
-                {% for picture in job.pictures.split(',') %}
-                <img src="{{ url_for('static', filename='profile_pics/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 150px; height: 150px; margin-right: 10px;">
-                {% endfor %}
+            <small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small>
+            <div>
+                {% if job.pictures %}
+                    {% for picture in job.pictures.split(',') %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    {% endfor %}
+                {% endif %}
             </div>
+            {% if job.poster_id == current_user.id %}
+            <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="mt-2">
+                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
             {% endif %}
         </div>
         {% endfor %}

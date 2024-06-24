@@ -62,3 +62,6 @@ class AddSkillForm(FlaskForm):
 class AddExperienceForm(FlaskForm):
     experience = StringField('Experience', validators=[DataRequired()])
     submit = SubmitField('Add Experience')
+    
+class DummyForm(FlaskForm):
+    submit = SubmitField('Delete')

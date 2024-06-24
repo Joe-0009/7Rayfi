@@ -63,7 +63,7 @@ def update_profile():
             
         db.session.commit()
         flash('Your profile has been updated!', 'success')
-        return redirect(url_for('profile.view_profile'))
+        return redirect(url_for('profile.view_profile', user_id=current_user.id))
     elif request.method == 'GET':
         form.first_name.data = current_user.first_name
         form.last_name.data = current_user.last_name

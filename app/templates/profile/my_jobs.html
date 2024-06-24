@@ -1,0 +1,35 @@
+<div class="tab-pane fade" id="jobs" role="tabpanel" aria-labelledby="jobs-tab">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Posted Jobs</h5>
+                    <ul class="list-unstyled">
+                        {% for job in posted_jobs %}
+                            <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
+                        {% endfor %}
+                        {% if not posted_jobs %}
+                            <li>No jobs posted</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Applied Jobs</h5>
+                    <ul class="list-unstyled">
+                        {% for job in applied_jobs %}
+                            <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})</li>
+                        {% endfor %}
+                        {% if not applied_jobs %}
+                            <li>No jobs applied for</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+``

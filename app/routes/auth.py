@@ -50,6 +50,6 @@ def sign_up():
             db.session.commit()
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
-            return redirect(url_for('profile.view_profile'))
+            return redirect(url_for('profile.view_profile', user_id=new_user.id))  # Pass user_id here
 
-    return render_template("auth/sign_up.html", user=current_user, form=form)
+    return render_template("auth/sign_up.html", form=form)
