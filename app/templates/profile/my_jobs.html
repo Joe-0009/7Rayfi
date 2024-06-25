@@ -27,6 +27,13 @@
                                 <button type="submit" class="btn btn-success">Finish</button>
                             </form>
                             {% endif %}
+                            {% if job.status == 'Not rated' %}
+                                {% if job.status == 'Finished' %}
+                                <form method="GET" action="{{ url_for('job.rate_job', job_id=job.id) }}" class="mt-2">
+                                    <button type="submit" class="btn btn-primary">Rate Job</button>
+                                </form>
+                                {% endif %}
+                            {% endif %}
                         </div>
                         {% endfor %}
                         {% if not posted_jobs %}
@@ -42,13 +49,18 @@
                     <h5 class="card-title">Applied Jobs</h5>
                     <ul class="list-unstyled">
                         {% for job in applied_jobs %}
-                        <li>{{ job.title }} - {{ job.status }} ({{ job.date_posted }})
-                            {% if job.status == 'Finished' %}
-                            <form method="GET" action="{{ url_for('job.rate_job', job_id=job.id) }}" class="mt-2">
-                                <button type="submit" class="btn btn-primary">Rate Job</button>
-                            </form>
-                            {% endif %}
-                        </li>
+                        <li>
+                            <h5>{{ job.title }}</h5>
+                            <p>{{ job.description }}</p>
+                            <small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }} on {{ job.date_posted }}</small>
+                            <div>
+                                {% if job.pictures %}
+                                {% for picture in job.pictures.split(',') %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            
                         {% endfor %}
                         {% if not applied_jobs %}
                         <li>No jobs applied for</li>
