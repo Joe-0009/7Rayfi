@@ -21,6 +21,21 @@
                 {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
+            {% if job.status == 'Open' %}
+            <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="mt-2">
+                {{ form.hidden_tag() }}
+                <button type="submit" class="btn btn-success">Finish</button>
+            </form>
+            {% endif %}
+            {% else %}
+            {% if job.status == 'Open' and current_user not in job.applied_by %}
+            <form method="POST" action="{{ url_for('job.apply_job', job_id=job.id) }}" class="mt-2">
+                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
+                <button type="submit" class="btn">Apply</button>
+            </form>
+            {% else %}
+            <p class="text-success">You have applied for this job</p>
+            {% endif %}
             {% endif %}
         </div>
         {% endfor %}

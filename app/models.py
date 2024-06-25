@@ -1,7 +1,7 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
-from datetime import date
+from datetime import date, datetime
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(150))
     location = db.Column(db.String(100))
     profession = db.Column(db.String(100))
-    date_of_birth = db.Column(db.Date)   
+    date_of_birth = db.Column(db.Date)
     about_me = db.Column(db.Text, nullable=True)
     profile_picture = db.Column(db.String(200), nullable=True)
     skills = db.relationship('Skill', backref='user', lazy=True)
@@ -35,7 +35,7 @@ class User(db.Model, UserMixin):
             today = date.today()
             return today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
         return None
-    
+
 class Skill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -54,7 +54,6 @@ class Certification(db.Model):
     name = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
@@ -62,11 +61,11 @@ class Job(db.Model):
     profession = db.Column(db.String(50))
     location = db.Column(db.String(100))
     pictures = db.Column(db.String(500))  # Store picture filenames as comma-separated string
-    status = db.Column(db.String(50))
+    status = db.Column(db.String(50), default='Open')
     date_posted = db.Column(db.DateTime(timezone=True), default=func.now())
     poster_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    rating = db.Column(db.Integer, nullable=True)
     applied_by = db.relationship('User', secondary='job_application', backref='applied_jobs')
-
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)

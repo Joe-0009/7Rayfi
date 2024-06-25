@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-from ..forms import JobForm, DummyForm
-from ..models import Job
+from ..forms import JobForm, DummyForm, RatingForm
+from ..models import Job, User
 from .. import db
 from datetime import datetime
 import os
@@ -18,7 +18,7 @@ def post_job():
         picture_filenames = []
         
         for picture in picture_files:
-            if picture.filename != '':
+            if picture.filename:
                 filename = secure_filename(picture.filename)
                 picture_path = os.path.join(current_app.config['UPLOAD_FOLDER2'], filename)
                 picture.save(picture_path)
@@ -29,9 +29,9 @@ def post_job():
             description=form.description.data,
             profession=form.profession.data,
             location=form.location.data,
-            pictures=','.join(picture_filenames) if picture_filenames else None,
+            pictures=','.join(picture_filenames),
             status='Open',
-            date_posted=datetime.now(),
+            date_posted=datetime.now(),  # Ensure this is set to datetime
             poster_id=current_user.id
         )
         
@@ -46,18 +46,63 @@ def post_job():
 @login_required
 def view_jobs():
     jobs = Job.query.all()
-    form = DummyForm()  # Dummy form for CSRF token
+    form = DummyForm()
     return render_template('job/view_jobs.html', jobs=jobs, form=form)
+
+
 
 @job.route('/delete-job/<int:job_id>', methods=['POST'])
 @login_required
 def delete_job(job_id):
     job = Job.query.get_or_404(job_id)
     if job.poster_id != current_user.id:
-        flash('You do not have permission to delete this job.', 'danger')
+        flash('You do not have permission to delete this job', 'danger')
         return redirect(url_for('job.view_jobs'))
-
+    
     db.session.delete(job)
     db.session.commit()
     flash('Job deleted successfully!', 'success')
     return redirect(url_for('job.view_jobs'))
+
+@job.route('/apply-job/<int:job_id>', methods=['POST'])
+@login_required
+def apply_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    if current_user in job.applied_by:
+        flash('You have already applied for this job', 'warning')
+    else:
+        job.applied_by.append(current_user)
+        db.session.commit()
+        flash('Successfully applied for the job!', 'success')
+    return redirect(url_for('job.view_jobs'))
+
+@job.route('/finish-job/<int:job_id>', methods=['POST'])
+@login_required
+def finish_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    if job.poster_id != current_user.id:
+        flash('You are not authorized to finish this job', 'danger')
+        return redirect(url_for('job.view_jobs'))
+
+    job.status = 'Finished'
+    db.session.commit()  # Ensure this commits the change
+    flash('Job marked as finished!', 'success')
+    return redirect(url_for('job.view_jobs'))
+
+
+@job.route('/rate-job/<int:job_id>', methods=['GET', 'POST'])
+@login_required
+def rate_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    if job.status != 'Finished':
+        flash('You can only rate a finished job', 'danger')
+        return redirect(url_for('job.view_jobs'))
+
+    form = RatingForm()
+    if form.validate_on_submit():
+        job.rating = form.rating.data
+        db.session.commit()
+        flash('Rating submitted successfully!', 'success')
+        return redirect(url_for('job.view_jobs'))
+
+    return render_template('job/rate_job.html', form=form, job=job)

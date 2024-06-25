@@ -1,7 +1,7 @@
 # forms.py
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, DateField, MultipleFileField
-from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, DateField, MultipleFileField, IntegerField
+from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError, NumberRange
 from .models import User
 from flask_wtf.file import FileAllowed
 from datetime import datetime
@@ -68,3 +68,6 @@ class DummyForm(FlaskForm):
     
 class DummyForm(FlaskForm):
     pass
+class RatingForm(FlaskForm):
+    rating = IntegerField('Rating (1-5)', validators=[DataRequired(), NumberRange(min=1, max=5)])
+    submit = SubmitField('Submit Rating')

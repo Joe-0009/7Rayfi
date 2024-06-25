@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Rate Job{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Rate Job</h2>
+    <form method="POST" action="{{ url_for('job.rate_job', job_id=job.id) }}" class="mt-4">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.rating.label(class="form-label") }}
+            {{ form.rating(class="form-control") }}
+        </div>
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

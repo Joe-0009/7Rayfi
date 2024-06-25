@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/workers.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/job.css') }}"> <!-- Add this line -->    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job.css') }}">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg ">
+    <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="{{ url_for('home.index') }}">7Rayfi</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
             <span class="navbar-toggler-icon"></span>
@@ -25,7 +26,7 @@
                     <a class="nav-item nav-link" href="{{ url_for('job.post_job') }}">Post Job</a>
                     <a class="nav-item nav-link" href="{{ url_for('job.view_jobs') }}">View Jobs</a>
                     <a class="nav-item nav-link" href="{{ url_for('profile.update_profile') }}">Edit Profile</a>
-                    <a class="nav-item nav-link" href="{{ url_for('worker.search_workers') }}">Search Workers</a> <!-- New Link -->
+                    <a class="nav-item nav-link" href="{{ url_for('worker.search_workers') }}">Search Workers</a>
                     <a class="nav-item nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
                 {% else %}
                     <a class="nav-item nav-link" href="{{ url_for('auth.login') }}">Login</a>

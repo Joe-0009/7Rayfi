@@ -25,6 +25,8 @@ def view_profile(user_id):
     add_skill_form = AddSkillForm()
     add_experience_form = AddExperienceForm()
     dummy_form = DummyForm()
+    applied_jobs = profile_user.applied_jobs
+    reviews_received = profile_user.reviews_received
 
     return render_template('profile/profile.html', 
                            profile_user=profile_user, 
@@ -37,7 +39,8 @@ def view_profile(user_id):
                            average_rating=average_rating,
                            add_skill_form=add_skill_form,
                            add_experience_form=add_experience_form,
-                           form=dummy_form) # Dummy form for CSRF token
+                           form=dummy_form, 
+                           reviews_received=reviews_received) # Dummy form for CSRF token
 
 @profile.route('/update-profile', methods=['GET', 'POST'])
 @login_required
