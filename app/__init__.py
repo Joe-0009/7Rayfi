@@ -32,7 +32,7 @@ def create_app():
     app.register_blueprint(job, url_prefix='/job')
     app.register_blueprint(worker, url_prefix='/worker')
 
-    from .models import User, Note, Skill, Experience, Certification, Job, Review
+    from .models import User, Skill, Experience, Certification, Job, Review
 
     with app.app_context():
         db.create_all()

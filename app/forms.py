@@ -1,4 +1,3 @@
-# forms.py
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, DateField, MultipleFileField, IntegerField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError, NumberRange
@@ -48,26 +47,33 @@ class JobForm(FlaskForm):
     location = SelectField('Location', choices=[('Casablanca', 'Casablanca'), ('Rabat', 'Rabat'), ('Marrakech', 'Marrakech'), ('Kenitra', 'Kenitra'), ('Fes', 'Fes')], validators=[DataRequired()])
     pictures = MultipleFileField('Job Pictures', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField('Post Job')
-    
-    
+
+
 class SearchWorkersForm(FlaskForm):
     location = SelectField('Location', choices=[('Casablanca', 'Casablanca'), ('Rabat', 'Rabat'), ('Marrakech', 'Marrakech'), ('Kenitra', 'Kenitra'), ('Fes', 'Fes')], validators=[DataRequired()])
     profession = SelectField('Profession', choices=[('Electrician', 'Electrician'), ('Barber', 'Barber'), ('Tailor', 'Tailor'), ('Plumber', 'Plumber')], validators=[DataRequired()])
     submit = SubmitField('Search')
-    
+
 class AddSkillForm(FlaskForm):
     skill = StringField('Skill', validators=[DataRequired()])
     submit = SubmitField('Add Skill')
-    
+
 class AddExperienceForm(FlaskForm):
     experience = StringField('Experience', validators=[DataRequired()])
     submit = SubmitField('Add Experience')
-    
+
 class DummyForm(FlaskForm):
     submit = SubmitField('Delete')
-    
+
 class DummyForm(FlaskForm):
     pass
+
 class RatingForm(FlaskForm):
     rating = IntegerField('Rating (1-5)', validators=[DataRequired(), NumberRange(min=1, max=5)])
     submit = SubmitField('Submit Rating')
+
+class ApplicationForm(FlaskForm):
+    submit = SubmitField('Apply')
+
+class AcceptApplicationForm(FlaskForm):
+    submit = SubmitField('Accept Application')

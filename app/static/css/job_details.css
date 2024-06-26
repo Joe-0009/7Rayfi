@@ -1,15 +1,4 @@
-/* my_jobs.css */
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-h5.card-title {
-    color: #00abf0;
-    margin-bottom: 20px;
-}
+/* job_details.css */
 
 .job-card {
     background-color: #1c2b3a;
@@ -24,19 +13,19 @@ h5.card-title {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-.job-header {
+.job-header, .application-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
 }
 
-.job-header .job-date {
+.job-header .job-date, .application-header .job-date {
     font-size: 14px;
     color: #ededed;
 }
 
-.job-header .fa-calendar {
+.job-header .fa-calendar, .application-header .fa-calendar {
     margin-right: 5px;
 }
 
@@ -87,22 +76,4 @@ h5.card-title {
 .text-success {
     margin-top: 10px;
     color: #28a745;
-}
-
-
-#listed-jobs {
-    background: transparent;
-}
-
-.list-group {
-    background: transparent;
-}
-
-#jobs {
-    background: transparent;
-}
-
-
-#No-jobs-posted {
-    background: transparent;
 }

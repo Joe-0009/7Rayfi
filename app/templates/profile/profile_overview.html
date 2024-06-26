@@ -27,10 +27,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Skills</h5>
                     <ul class="list-unstyled" id="skills-list">
-                        {% for skill in skills %}
+                        {% for skill in profile_user.skills %}
                             <li>{{ skill.name }}</li>
                         {% endfor %}
-                        {% if not skills %}
+                        {% if not profile_user.skills %}
                             <li>No skills provided</li>
                         {% endif %}
                     </ul>
@@ -56,10 +56,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Experience</h5>
                     <ul class="list-unstyled" id="experiences-list">
-                        {% for experience in experiences %}
+                        {% for experience in profile_user.experiences %}
                             <li>{{ experience.title }} at {{ experience.company }} ({{ experience.duration }})</li>
                         {% endfor %}
-                        {% if not experiences %}
+                        {% if not profile_user.experiences %}
                             <li>No experience provided</li>
                         {% endif %}
                     </ul>
@@ -87,10 +87,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Certifications</h5>
                     <ul class="list-unstyled">
-                        {% for certification in certifications %}
+                        {% for certification in profile_user.certifications %}
                             <li>{{ certification.name }}</li>
                         {% endfor %}
-                        {% if not certifications %}
+                        {% if not profile_user.certifications %}
                             <li>No certifications provided</li>
                         {% endif %}
                     </ul>

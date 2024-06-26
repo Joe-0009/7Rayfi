@@ -39,6 +39,19 @@
                                 </form>
                                 {% endif %}
                             </div>
+                            <div class="mt-4">
+                                <h6>Applicants:</h6>
+                                <ul class="list-unstyled">
+                                    {% for applicant in job.applicants %}
+                                    <li>{{ applicant.first_name }} {{ applicant.last_name }}
+                                        <form method="POST" action="{{ url_for('job.accept_application', job_id=job.id, user_id=applicant.id) }}" class="d-inline">
+                                            {{ form.hidden_tag() }}
+                                            <button type="submit" class="btn btn-primary btn-sm">Accept</button>
+                                        </form>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                         {% endfor %}
                         {% if not posted_jobs %}

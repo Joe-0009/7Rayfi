@@ -3,12 +3,6 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 from datetime import date, datetime
 
-class Note(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.String(10000))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
@@ -24,10 +18,11 @@ class User(db.Model, UserMixin):
     skills = db.relationship('Skill', backref='user', lazy=True)
     experiences = db.relationship('Experience', backref='user', lazy=True)
     certifications = db.relationship('Certification', backref='user', lazy=True)
-    posted_jobs = db.relationship('Job', backref='poster', lazy=True)
-    notes = db.relationship('Note', backref='user', lazy=True)
+    posted_jobs = db.relationship('Job', backref='poster', lazy=True, foreign_keys='Job.poster_id')
     reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', backref='reviewee', lazy=True)
     reviews_given = db.relationship('Review', foreign_keys='Review.reviewer_id', backref='reviewer', lazy=True)
+    applications = db.relationship('Application', backref='applicant', lazy=True)
+    applied_jobs = db.relationship('Job', secondary='application', backref='applicants', lazy='dynamic')
 
     @property
     def age(self):
@@ -65,7 +60,14 @@ class Job(db.Model):
     date_posted = db.Column(db.DateTime(timezone=True), default=func.now())
     poster_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     rating = db.Column(db.Integer, nullable=True)
-    applied_by = db.relationship('User', secondary='job_application', backref='applied_jobs')
+    accepted_worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    applications = db.relationship('Application', backref='job', lazy=True)
+
+class Application(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    worker_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    date_applied = db.Column(db.DateTime(timezone=True), default=func.now())
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,8 +76,3 @@ class Review(db.Model):
     rating = db.Column(db.Integer)
     comment = db.Column(db.Text)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
-
-job_application = db.Table('job_application',
-    db.Column('job_id', db.Integer, db.ForeignKey('job.id'), primary_key=True),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
-)
