@@ -14,7 +14,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">                
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/update_profile.css') }}">  
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view_jobs.css') }}">  
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_jobs.css') }}">  
+
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -24,7 +27,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbar">
-            <div class="navbar-nav">
+            <div class="navbar-nav ml-auto">
                 {% if current_user.is_authenticated %}
                     <a class="nav-item nav-link" href="{{ url_for('home.index') }}">Home</a>
                     <a class="nav-item nav-link" href="{{ url_for('profile.view_profile', user_id=current_user.id) }}">Profile</a>

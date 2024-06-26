@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="text-center">Post a Job</h2>
-    <form method="POST" enctype="multipart/form-data" class="mt-4">
+    <form method="POST" enctype="multipart/form-data" class="mt-4 job-form">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{ form.title.label(class="form-label") }}
@@ -26,7 +26,7 @@
             {{ form.pictures(class="form-control-file", multiple=True) }}
         </div>
         <div class="text-center">
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-primary btn-submit") }}
         </div>
     </form>
 </div>

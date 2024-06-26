@@ -1,0 +1,54 @@
+/* update_profile.css */
+
+.update-profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1c2b3a;
+    border-radius: 10px;
+    color: #ededed;
+}
+
+h2.text-center {
+    color: #00abf0;
+    margin-bottom: 20px;
+}
+
+.update-profile-form .form-group {
+    margin-bottom: 20px;
+}
+
+.update-profile-form .form-label {
+    font-weight: 600;
+    color: #ededed;
+}
+
+.update-profile-form .form-control, 
+.update-profile-form .form-control-file {
+    background-color: #081b29;
+    border: 1px solid #00abf0;
+    color: #ededed;
+}
+
+.update-profile-form .form-control::placeholder {
+    color: #b0b0b0;
+}
+
+.update-profile-form .form-control:focus, 
+.update-profile-form .form-control-file:focus {
+    background-color: #0a2c3c;
+    border-color: #00abf0;
+    color: #ededed;
+}
+
+.update-profile-form .btn-submit {
+    background-color: #00abf0;
+    border-color: #00abf0;
+    color: #081b29;
+    transition: background-color 0.3s;
+}
+
+.update-profile-form .btn-submit:hover {
+    background-color: #008bb0;
+    color: #fff;
+}

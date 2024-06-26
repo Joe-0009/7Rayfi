@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-    <div class="card p-4" style="max-width: 400px; width: 100%;">
+<div class="d-flex justify-content-center align-items-center login-container">
+    <div class="card p-4 login-card">
         <h3 class="text-center mb-4">Login</h3>
         <form method="POST" action="{{ url_for('auth.login') }}">
             {{ form.hidden_tag() }}

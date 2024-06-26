@@ -2,41 +2,52 @@
 {% block title %}View Jobs{% endblock %}
 {% block content %}
 <div class="container mt-4">
-    <h2 class="text-center">Available Jobs</h2>
-    <div class="list-group mt-4">
+    <h2 class="text-center mb-4">Available Jobs</h2>
+    <div class="row">
         {% for job in jobs %}
-        <div class="list-group-item">
-            <h5 class="mb-1">{{ job.title }}</h5>
-            <p class="mb-1">{{ job.description }}</p>
-            <small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small>
-            <div>
-                {% if job.pictures %}
-                    {% for picture in job.pictures.split(',') %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
-                    {% endfor %}
-                {% endif %}
+        <div class="col-md-6 mb-4">
+            <div class="card job-card">
+                <div class="card-body">
+                    <div class="job-header">
+                        <div class="job-date">
+                            <i class="fa fa-calendar"></i> {{ job.date_posted }}
+                        </div>
+                        <h5 class="card-title">{{ job.title }}</h5>
+                    </div>
+                    <p class="card-text">{{ job.description }}</p>
+                    <p><small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small></p>
+                    <div class="job-pictures">
+                        {% if job.pictures %}
+                            {% for picture in job.pictures.split(',') %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="job-actions mt-2">
+                        {% if job.poster_id == current_user.id %}
+                            <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="d-inline">
+                                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            {% if job.status == 'Open' %}
+                            <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="d-inline">
+                                {{ form.hidden_tag() }}
+                                <button type="submit" class="btn btn-success">Finish</button>
+                            </form>
+                            {% endif %}
+                        {% else %}
+                            {% if job.status == 'Open' and current_user not in job.applied_by %}
+                            <form method="POST" action="{{ url_for('job.apply_job', job_id=job.id) }}" class="d-inline">
+                                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                            </form>
+                            {% else %}
+                            <p class="text-success">You have applied for this job</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            {% if job.poster_id == current_user.id %}
-            <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="mt-2">
-                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-            {% if job.status == 'Open' %}
-            <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="mt-2">
-                {{ form.hidden_tag() }}
-                <button type="submit" class="btn btn-success">Finish</button>
-            </form>
-            {% endif %}
-            {% else %}
-            {% if job.status == 'Open' and current_user not in job.applied_by %}
-            <form method="POST" action="{{ url_for('job.apply_job', job_id=job.id) }}" class="mt-2">
-                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
-                <button type="submit" class="btn">Apply</button>
-            </form>
-            {% else %}
-            <p class="text-success">You have applied for this job</p>
-            {% endif %}
-            {% endif %}
         </div>
         {% endfor %}
     </div>

@@ -1,66 +1,76 @@
-<div class="tab-pane fade" id="jobs" role="tabpanel" aria-labelledby="jobs-tab">
+<div class="tab-pane fade show active" id="jobs" role="tabpanel" aria-labelledby="jobs-tab">
     <div class="row">
         <div class="col-md-12 mb-3">
-            <div class="card">
+            <div class="card job-card">
                 <div class="card-body">
                     <h5 class="card-title">Posted Jobs</h5>
-                    <div class="list-group">
+                    <div class="list-group" id="listed-jobs">
                         {% for job in posted_jobs %}
-                        <div class="list-group-item">
-                            <h5 class="mb-1">{{ job.title }}</h5>
-                            <p class="mb-1">{{ job.description }}</p>
-                            <small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }} on {{ job.date_posted }}</small>
-                            <div>
+                        <div class="list-group-item job-item" id="jobs">
+                            <div class="job-header">
+                                <div class="job-date">
+                                    <i class="fa fa-calendar"></i> {{ job.date_posted }}
+                                </div>
+                                <h5 class="job-title">{{ job.title }}</h5>
+                            </div>
+                            <p class="job-description">{{ job.description }}</p>
+                            <p><small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small></p>
+                            <div class="job-pictures">
                                 {% if job.pictures %}
                                 {% for picture in job.pictures.split(',') %}
                                 <img src="{{ url_for('static', filename='uploads/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
                                 {% endfor %}
                                 {% endif %}
                             </div>
-                            <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="mt-2">
-                                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                            {% if job.status == 'Open' %}
-                            <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="mt-2">
-                                {{ form.hidden_tag() }}
-                                <button type="submit" class="btn btn-success">Finish</button>
-                            </form>
-                            {% endif %}
-                            {% if job.status == 'Not rated' %}
-                                {% if job.status == 'Finished' %}
-                                <form method="GET" action="{{ url_for('job.rate_job', job_id=job.id) }}" class="mt-2">
+                            <div class="job-actions mt-2">
+                                <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="d-inline">
+                                    {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                                {% if job.status == 'Open' %}
+                                <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="d-inline">
+                                    {{ form.hidden_tag() }}
+                                    <button type="submit" class="btn btn-success">Finish</button>
+                                </form>
+                                {% endif %}
+                                {% if job.status == 'Not rated' and job.status == 'Finished' %}
+                                <form method="GET" action="{{ url_for('job.rate_job', job_id=job.id) }}" class="d-inline">
                                     <button type="submit" class="btn btn-primary">Rate Job</button>
                                 </form>
                                 {% endif %}
-                            {% endif %}
+                            </div>
                         </div>
                         {% endfor %}
                         {% if not posted_jobs %}
-                        <li class="list-group-item">No jobs posted</li>
+                        <div class="list-group-item">No jobs posted</div>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-12 mb-3">
-            <div class="card">
+            <div class="card job-card">
                 <div class="card-body">
                     <h5 class="card-title">Applied Jobs</h5>
                     <ul class="list-unstyled">
                         {% for job in applied_jobs %}
-                        <li>
-                            <h5>{{ job.title }}</h5>
-                            <p>{{ job.description }}</p>
-                            <small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }} on {{ job.date_posted }}</small>
-                            <div>
+                        <li class="job-item">
+                            <div class="job-header">
+                                <div class="job-date">
+                                    <i class="fa fa-calendar"></i> {{ job.date_posted }}
+                                </div>
+                                <h5 class="job-title">{{ job.title }}</h5>
+                            </div>
+                            <p class="job-description">{{ job.description }}</p>
+                            <p><small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small></p>
+                            <div class="job-pictures">
                                 {% if job.pictures %}
                                 {% for picture in job.pictures.split(',') %}
                                 <img src="{{ url_for('static', filename='uploads/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
                                 {% endfor %}
                                 {% endif %}
                             </div>
-                            
+                        </li>
                         {% endfor %}
                         {% if not applied_jobs %}
                         <li>No jobs applied for</li>

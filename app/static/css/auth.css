@@ -1,0 +1,61 @@
+/* auth.css */
+
+.login-container, .signup-container {
+    height: 100vh;
+    background-color: #081b29;
+}
+
+.login-card, .signup-card {
+    max-width: 400px;
+    width: 100%;
+    background-color: #1c2b3a;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h3.text-center {
+    color: #00abf0;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #ededed;
+}
+
+.form-control {
+    background-color: #081b29;
+    border: 1px solid #00abf0;
+    color: #ededed;
+}
+
+.form-control::placeholder {
+    color: #b0b0b0;
+}
+
+.form-control:focus {
+    background-color: #0a2c3c;
+    border-color: #00abf0;
+    color: #ededed;
+}
+
+.btn-primary {
+    background-color: #00abf0;
+    border-color: #00abf0;
+    color: #081b29;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #008bb0;
+    color: #fff;
+}
+
+.text-center a {
+    color: #00abf0;
+    text-decoration: none;
+}
+
+.text-center a:hover {
+    text-decoration: underline;
+}

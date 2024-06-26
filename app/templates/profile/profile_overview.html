@@ -1,7 +1,7 @@
 <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
     <div class="row">
-        <div class="col-md-6 mb-3">
-            <div class="card">
+        <div class="col-md-6 mb-4">
+            <div class="card profile-card">
                 <div class="card-body">
                     <h5 class="card-title">Basic Information</h5>
                     <p class="card-text"><strong>Name:</strong> {{ profile_user.first_name or "" }} {{ profile_user.last_name or "" }}</p>
@@ -12,8 +12,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mb-3">
-            <div class="card">
+        <div class="col-md-6 mb-4">
+            <div class="card profile-card">
                 <div class="card-body">
                     <h5 class="card-title">About Me</h5>
                     <p class="card-text">{{ profile_user.about_me or "Not Provided" }}</p>
@@ -22,8 +22,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 mb-3">
-            <div class="card">
+        <div class="col-md-6 mb-4">
+            <div class="card profile-card">
                 <div class="card-body">
                     <h5 class="card-title">Skills</h5>
                     <ul class="list-unstyled" id="skills-list">
@@ -51,8 +51,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mb-3">
-            <div class="card">
+        <div class="col-md-6 mb-4">
+            <div class="card profile-card">
                 <div class="card-body">
                     <h5 class="card-title">Experience</h5>
                     <ul class="list-unstyled" id="experiences-list">
@@ -82,8 +82,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 mb-3">
-            <div class="card">
+        <div class="col-md-6 mb-4">
+            <div class="card profile-card">
                 <div class="card-body">
                     <h5 class="card-title">Certifications</h5>
                     <ul class="list-unstyled">

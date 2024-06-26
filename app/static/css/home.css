@@ -3,6 +3,9 @@
     display: flex;
     align-items: center;
     padding: 50 0%;
+    background-size: cover;
+    background-position: right;
+
 }
 
 .home-content {

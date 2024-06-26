@@ -24,3 +24,18 @@ body {
     z-index: 100;
 }
 
+.container {
+    max-width: 100%;
+    padding: 0 10%;
+}
+
+.job-listings {
+    margin-top: 20px;
+}
+
+.job-listing {
+    background-color: #1c2b3a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
