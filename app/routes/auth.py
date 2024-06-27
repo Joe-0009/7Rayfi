@@ -9,6 +9,7 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    """Handle user login."""
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -29,11 +30,14 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    """Handle user logout."""
     logout_user()
+    flash('You have been logged out.', category='success')
     return redirect(url_for('auth.login'))
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    """Handle user registration."""
     form = RegistrationForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -41,7 +45,11 @@ def sign_up():
         password1 = form.password1.data
         password2 = form.password2.data
 
-        if password1 != password2:
+        if User.query.filter_by(email=email).first():
+            flash('Email already exists. Please use a different email.', category='error')
+        elif User.query.filter_by(username=username).first():
+            flash('Username already exists. Please choose a different username.', category='error')
+        elif password1 != password2:
             flash('Passwords do not match. Please try again.', category='error')
         else:
             hashed_password = generate_password_hash(password1, method='pbkdf2:sha256')
@@ -49,7 +57,7 @@ def sign_up():
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
-            flash('Account created!', category='success')
-            return redirect(url_for('profile.view_profile', user_id=new_user.id))  # Pass user_id here
+            flash('Account created successfully!', category='success')
+            return redirect(url_for('profile.view_profile', user_id=new_user.id))
 
     return render_template("auth/sign_up.html", form=form)

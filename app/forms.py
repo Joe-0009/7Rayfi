@@ -5,6 +5,35 @@ from .models import User
 from flask_wtf.file import FileAllowed
 from datetime import datetime
 
+# List of Moroccan cities
+MOROCCAN_CITIES = [
+    ('Casablanca', 'Casablanca'),
+    ('Rabat', 'Rabat'),
+    ('Marrakech', 'Marrakech'),
+    ('Kenitra', 'Kenitra'),
+    ('Fes', 'Fes'),
+    ('Tangier', 'Tangier'),
+    ('Agadir', 'Agadir'),
+    ('Oujda', 'Oujda'),
+    ('Tetouan', 'Tetouan'),
+    ('Safi', 'Safi')
+]
+
+# List of professions
+PROFESSIONS = [
+    ('Electrician', 'Electrician'),
+    ('Barber', 'Barber'),
+    ('Tailor', 'Tailor'),
+    ('Plumber', 'Plumber'),
+    ('Cleaner', 'Cleaner'),
+    ('Gardener', 'Gardener'),
+    ('Painter', 'Painter'),
+    ('Carpenter', 'Carpenter'),
+    ('Mechanic', 'Mechanic'),
+    ('Driver', 'Driver')
+]
+
+# Registration Form
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=50)])
@@ -16,64 +45,68 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Email already exists.')
-        
+
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username already exists.')
 
+# Login Form
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
-
+# Update Profile Form
 class UpdateProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    location = SelectField('Location', choices=[('Casablanca', 'Casablanca'), ('Rabat', 'Rabat'), ('Marrakech', 'Marrakech'), ('Kenitra', 'Kenitra'), ('Fes', 'Fes')], validators=[DataRequired()])
-    profession = SelectField('Profession', choices=[('Electrician', 'Electrician'), ('Barber', 'Barber'), ('Tailor', 'Tailor'), ('Plumber', 'Plumber')], validators=[DataRequired()])
+    location = SelectField('Location', choices=MOROCCAN_CITIES, validators=[DataRequired()])
+    profession = SelectField('Profession', choices=PROFESSIONS, validators=[DataRequired()])
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d')
     about_me = TextAreaField('About Me')
     profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Update Profile')
 
-
+# Job Form
 class JobForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired(), Length(min=2, max=100)])
     description = TextAreaField('Job Description', validators=[DataRequired(), Length(min=10)])
-    profession = SelectField('Profession', choices=[('Electrician', 'Electrician'), ('Barber', 'Barber'), ('Tailor', 'Tailor'), ('Plumber', 'Plumber')], validators=[DataRequired()])
-    location = SelectField('Location', choices=[('Casablanca', 'Casablanca'), ('Rabat', 'Rabat'), ('Marrakech', 'Marrakech'), ('Kenitra', 'Kenitra'), ('Fes', 'Fes')], validators=[DataRequired()])
+    profession = SelectField('Profession', choices=PROFESSIONS, validators=[DataRequired()])
+    location = SelectField('Location', choices=MOROCCAN_CITIES, validators=[DataRequired()])
     pictures = MultipleFileField('Job Pictures', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField('Post Job')
 
-
+# Search Workers Form
 class SearchWorkersForm(FlaskForm):
-    location = SelectField('Location', choices=[('Casablanca', 'Casablanca'), ('Rabat', 'Rabat'), ('Marrakech', 'Marrakech'), ('Kenitra', 'Kenitra'), ('Fes', 'Fes')], validators=[DataRequired()])
-    profession = SelectField('Profession', choices=[('Electrician', 'Electrician'), ('Barber', 'Barber'), ('Tailor', 'Tailor'), ('Plumber', 'Plumber')], validators=[DataRequired()])
+    location = SelectField('Location', choices=MOROCCAN_CITIES, validators=[DataRequired()])
+    profession = SelectField('Profession', choices=PROFESSIONS, validators=[DataRequired()])
     submit = SubmitField('Search')
 
+# Add Skill Form
 class AddSkillForm(FlaskForm):
     skill = StringField('Skill', validators=[DataRequired()])
     submit = SubmitField('Add Skill')
 
+# Add Experience Form
 class AddExperienceForm(FlaskForm):
     experience = StringField('Experience', validators=[DataRequired()])
     submit = SubmitField('Add Experience')
 
+# Dummy Form for generic actions like delete
 class DummyForm(FlaskForm):
     submit = SubmitField('Delete')
 
-class DummyForm(FlaskForm):
-    pass
-
+# Rating Form for rating jobs
 class RatingForm(FlaskForm):
     rating = IntegerField('Rating (1-5)', validators=[DataRequired(), NumberRange(min=1, max=5)])
     submit = SubmitField('Submit Rating')
 
+# Application Form for applying to jobs
 class ApplicationForm(FlaskForm):
     submit = SubmitField('Apply')
 
+# Accept Application Form
 class AcceptApplicationForm(FlaskForm):
     submit = SubmitField('Accept Application')

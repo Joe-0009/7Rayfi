@@ -11,32 +11,39 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+
+    # Configuration settings
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/profile_pics')
     app.config['UPLOAD_FOLDER2'] = os.path.join(app.root_path, 'static/uploads')
-    
+
+    # Initialize extensions
     db.init_app(app)
     csrf.init_app(app)
     migrate.init_app(app, db)
 
+    # Register blueprints
     from app.routes.auth import auth
     from app.routes.home import home
     from app.routes.profile import profile
     from app.routes.job import job
     from app.routes.worker import worker
-     
+
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(home, url_prefix='/')
     app.register_blueprint(profile, url_prefix='/profile')
     app.register_blueprint(job, url_prefix='/job')
     app.register_blueprint(worker, url_prefix='/worker')
 
+    # Import models
     from .models import User, Skill, Experience, Certification, Job, Review
 
+    # Create database tables if they don't exist
     with app.app_context():
         db.create_all()
 
+    # Configure login manager
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
@@ -48,7 +55,8 @@ def create_app():
     return app
 
 def create_database(app):
-    if not os.path.exists(os.path.join('website', 'database.db')):
+    database_path = os.path.join(app.root_path, 'database.db')
+    if not os.path.exists(database_path):
         with app.app_context():
             db.create_all()
         print('Created Database!')

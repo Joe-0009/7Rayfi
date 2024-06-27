@@ -2,27 +2,37 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from datetime import date, datetime
+import enum
+
+class JobStatus(enum.Enum):
+    OPEN = "Open"
+    IN_PROGRESS = "In Progress"
+    FINISHED = "Finished"
+
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True)
-    username = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    first_name = db.Column(db.String(150))
-    last_name = db.Column(db.String(150))
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    first_name = db.Column(db.String(150), nullable=False)
+    last_name = db.Column(db.String(150), nullable=False)
     location = db.Column(db.String(100))
     profession = db.Column(db.String(100))
     date_of_birth = db.Column(db.Date)
-    about_me = db.Column(db.Text, nullable=True)
-    profile_picture = db.Column(db.String(200), nullable=True)
-    skills = db.relationship('Skill', backref='user', lazy=True)
-    experiences = db.relationship('Experience', backref='user', lazy=True)
-    certifications = db.relationship('Certification', backref='user', lazy=True)
+    about_me = db.Column(db.Text)
+    profile_picture = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+
+    skills = db.relationship('Skill', backref='user', lazy=True, cascade="all, delete-orphan")
+    experiences = db.relationship('Experience', backref='user', lazy=True, cascade="all, delete-orphan")
+    certifications = db.relationship('Certification', backref='user', lazy=True, cascade="all, delete-orphan")
     posted_jobs = db.relationship('Job', backref='poster', lazy=True, foreign_keys='Job.poster_id')
     reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', backref='reviewee', lazy=True)
     reviews_given = db.relationship('Review', foreign_keys='Review.reviewer_id', backref='reviewer', lazy=True)
     applications = db.relationship('Application', backref='applicant', lazy=True)
-    applied_jobs = db.relationship('Job', secondary='application', backref='applicants', lazy='dynamic')
 
     @property
     def age(self):
@@ -31,48 +41,99 @@ class User(db.Model, UserMixin):
             return today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
         return None
 
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+
 class Skill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f'<Skill {self.name}>'
 
 class Experience(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    company = db.Column(db.String(100))
-    duration = db.Column(db.String(50))
+    title = db.Column(db.String(100), nullable=False)
+    company = db.Column(db.String(100), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date)
     description = db.Column(db.Text)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f'<Experience {self.title} at {self.company}>'
 
 class Certification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(100), nullable=False)
+    issuer = db.Column(db.String(100), nullable=False)
+    issue_date = db.Column(db.Date, nullable=False)
+    expiry_date = db.Column(db.Date)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f'<Certification {self.name}>'
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    jobs = db.relationship('Job', backref='category', lazy=True)
+
+    def __repr__(self):
+        return f'<Category {self.name}>'
 
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    description = db.Column(db.Text)
-    profession = db.Column(db.String(50))
-    location = db.Column(db.String(100))
-    pictures = db.Column(db.String(500))  # Store picture filenames as comma-separated string
-    status = db.Column(db.String(50), default='Open')
-    date_posted = db.Column(db.DateTime(timezone=True), default=func.now())
-    poster_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    rating = db.Column(db.Integer, nullable=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    profession = db.Column(db.String(50), nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.Enum(JobStatus), default=JobStatus.OPEN, nullable=False)
+    date_posted = db.Column(db.DateTime, default=func.now(), nullable=False)
+    poster_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     accepted_worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    rating = db.Column(db.Float, nullable=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     applications = db.relationship('Application', backref='job', lazy=True)
+    reviews = db.relationship('Review', backref='job', lazy=True)
+
+    def __repr__(self):
+        return f'<Job {self.title}>'
 
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
-    worker_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    date_applied = db.Column(db.DateTime(timezone=True), default=func.now())
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
+    worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date_applied = db.Column(db.DateTime, default=func.now(), nullable=False)
+    status = db.Column(db.String(20), nullable=True)
+
+    def __repr__(self):
+        return f'<Application {self.id} for Job {self.job_id}>'
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    reviewer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    reviewee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    rating = db.Column(db.Integer)
-    comment = db.Column(db.Text)
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
+    reviewer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    reviewee_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.Text, nullable=True)
+    date = db.Column(db.DateTime, default=func.now(), nullable=False)
+
+    def __repr__(self):
+        return f'<Review {self.id} by User {self.reviewer_id}>'
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
+    is_read = db.Column(db.Boolean, default=False, nullable=False)
+
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
+
+    def __repr__(self):
+        return f'<Message {self.id} from User {self.sender_id} to User {self.receiver_id}>'

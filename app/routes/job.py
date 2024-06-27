@@ -1,28 +1,40 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, current_app
+import os
+from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from ..forms import JobForm, DummyForm, RatingForm
-from ..models import Job, User, Application
+from ..models import Job, User, Application, Review
 from .. import db
-from datetime import datetime
-import os
+from datetime import datetime, timezone
+from PIL import Image
 
 job = Blueprint('job', __name__)
+
+def save_pictures(pictures):
+    """Save and resize uploaded job pictures, return filenames."""
+    picture_filenames = []
+    for picture in pictures:
+        if picture.filename:
+            filename = secure_filename(picture.filename)
+            _, ext = os.path.splitext(filename)
+            new_filename = f"{current_user.id}_{datetime.now().timestamp()}{ext}"
+            picture_path = os.path.join(current_app.config['UPLOAD_FOLDER2'], new_filename)
+            
+            # Resize image
+            output_size = (800, 600)
+            img = Image.open(picture)
+            img.thumbnail(output_size)
+            img.save(picture_path)
+            
+            picture_filenames.append(new_filename)
+    return picture_filenames
 
 @job.route('/post-job', methods=['GET', 'POST'])
 @login_required
 def post_job():
     form = JobForm()
     if form.validate_on_submit():
-        picture_files = form.pictures.data
-        picture_filenames = []
-        
-        for picture in picture_files:
-            if picture.filename:
-                filename = secure_filename(picture.filename)
-                picture_path = os.path.join(current_app.config['UPLOAD_FOLDER2'], filename)
-                picture.save(picture_path)
-                picture_filenames.append(filename)
+        picture_filenames = save_pictures(form.pictures.data)
         
         new_job = Job(
             title=form.title.data,
@@ -31,7 +43,7 @@ def post_job():
             location=form.location.data,
             pictures=','.join(picture_filenames),
             status='Open',
-            date_posted=datetime.now(),
+            date_posted=datetime.now(timezone.utc),
             poster_id=current_user.id
         )
         
@@ -45,9 +57,8 @@ def post_job():
 @job.route('/jobs')
 @login_required
 def view_jobs():
-    jobs = Job.query.all()
-    form = DummyForm()
-    return render_template('job/view_jobs.html', jobs=jobs, form=form)
+    jobs = Job.query.order_by(Job.date_posted.desc()).all()
+    return render_template('job/view_jobs.html', jobs=jobs, form=DummyForm())
 
 @job.route('/delete-job/<int:job_id>', methods=['POST'])
 @login_required
@@ -66,10 +77,16 @@ def delete_job(job_id):
 @login_required
 def apply_job(job_id):
     job = Job.query.get_or_404(job_id)
-    if current_user in job.applied_by:
+    if job.status != 'Open':
+        flash('This job is no longer open for applications', 'warning')
+        return redirect(url_for('job.view_jobs'))
+    
+    application = Application.query.filter_by(job_id=job_id, worker_id=current_user.id).first()
+    if application:
         flash('You have already applied for this job', 'warning')
     else:
-        job.applied_by.append(current_user)
+        new_application = Application(job_id=job_id, worker_id=current_user.id, date_applied=datetime.now(timezone.utc))
+        db.session.add(new_application)
         db.session.commit()
         flash('Successfully applied for the job!', 'success')
     return redirect(url_for('job.view_jobs'))
@@ -78,15 +95,29 @@ def apply_job(job_id):
 @login_required
 def finish_job(job_id):
     job = Job.query.get_or_404(job_id)
+
     if job.poster_id != current_user.id:
-        flash('You are not authorized to finish this job', 'danger')
-        return redirect(url_for('job.view_jobs'))
+        flash('You do not have permission to finish this job', 'danger')
+        return redirect(url_for('profile.view_profile', user_id=current_user.id))
 
-    job.status = 'Finished'
-    db.session.commit()
-    flash('Job marked as finished!', 'success')
-    return redirect(url_for('job.view_jobs'))
+    form = RatingForm()
+    if form.validate_on_submit():
+        new_review = Review(
+            reviewer_id=current_user.id,
+            reviewee_id=job.accepted_worker_id,
+            rating=form.rating.data,
+            comment=form.review.data
+        )
+        db.session.add(new_review)
+        job.status = 'Finished'
+        db.session.commit()
+        flash('Job finished and review submitted!', 'success')
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"{field.capitalize()}: {error}", 'danger')
 
+    return redirect(url_for('profile.view_profile', user_id=current_user.id))
 
 @job.route('/rate-job/<int:job_id>', methods=['GET', 'POST'])
 @login_required
@@ -105,8 +136,6 @@ def rate_job(job_id):
 
     return render_template('job/rate_job.html', form=form, job=job)
 
-
-
 @job.route('/job/<int:job_id>')
 @login_required
 def job_details(job_id):
@@ -114,16 +143,23 @@ def job_details(job_id):
     applications = Application.query.filter_by(job_id=job_id).all()
     return render_template('job/job_details.html', job=job, applications=applications)
 
-@job.route('/accept-application/<int:application_id>', methods=['POST'])
+@job.route('/accept-application/<int:job_id>/<int:application_id>', methods=['POST'])
 @login_required
-def accept_application(application_id):
+def accept_application(job_id, application_id):
+    job = Job.query.get_or_404(job_id)
     application = Application.query.get_or_404(application_id)
-    job = Job.query.get_or_404(application.job_id)
+
     if job.poster_id != current_user.id:
-        flash('You are not authorized to accept applications for this job', 'danger')
-        return redirect(url_for('job.job_details', job_id=job.id))
-    
+        flash('You do not have permission to accept applications for this job', 'danger')
+        return redirect(url_for('profile.view_profile', user_id=current_user.id))
+
+    if job.status != 'Open':
+        flash('This job is no longer open for applications', 'warning')
+        return redirect(url_for('profile.view_profile', user_id=current_user.id))
+
     job.accepted_worker_id = application.worker_id
+    job.status = 'In Progress'
     db.session.commit()
-    flash('You have accepted an application', 'success')
-    return redirect(url_for('job.job_details', job_id=job.id))
+    flash('Application accepted!', 'success')
+
+    return redirect(url_for('profile.view_profile', user_id=current_user.id))
