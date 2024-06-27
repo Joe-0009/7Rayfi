@@ -4,20 +4,24 @@ from sqlalchemy.sql import func
 from datetime import date, datetime
 import enum
 
-class JobStatus(enum.Enum):
+class ApplicationStatus(enum.Enum):
     OPEN = "Open"
     IN_PROGRESS = "In Progress"
-    FINISHED = "Finished"
+    COMPLETED = "Completed"
+    CANCELED = "Canceled"
 
-
+accepted_applicants = db.Table('accepted_applicants',
+    db.Column('job_id', db.Integer, db.ForeignKey('job.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    first_name = db.Column(db.String(150), nullable=False)
-    last_name = db.Column(db.String(150), nullable=False)
+    first_name = db.Column(db.String(150), nullable=True)
+    last_name = db.Column(db.String(150), nullable=True)
     location = db.Column(db.String(100))
     profession = db.Column(db.String(100))
     date_of_birth = db.Column(db.Date)
@@ -32,7 +36,8 @@ class User(db.Model, UserMixin):
     posted_jobs = db.relationship('Job', backref='poster', lazy=True, foreign_keys='Job.poster_id')
     reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', backref='reviewee', lazy=True)
     reviews_given = db.relationship('Review', foreign_keys='Review.reviewer_id', backref='reviewer', lazy=True)
-    applications = db.relationship('Application', backref='applicant', lazy=True)
+    applications = db.relationship('Application', back_populates='applicant', lazy=True)
+    accepted_jobs = db.relationship('Job', secondary=accepted_applicants, backref=db.backref('accepted_workers', lazy='dynamic'))
 
     @property
     def age(self):
@@ -43,7 +48,6 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f'<User {self.username}>'
-
 
 class Skill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -90,28 +94,39 @@ class Job(db.Model):
     description = db.Column(db.Text, nullable=False)
     profession = db.Column(db.String(50), nullable=False)
     location = db.Column(db.String(100), nullable=False)
-    status = db.Column(db.Enum(JobStatus), default=JobStatus.OPEN, nullable=False)
+    status = db.Column(db.Enum(ApplicationStatus), default=ApplicationStatus.OPEN, nullable=False)
     date_posted = db.Column(db.DateTime, default=func.now(), nullable=False)
     poster_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    accepted_worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    accepted_workers = db.relationship('User', secondary='accepted_applicants', backref=db.backref('accepted_jobs', lazy='dynamic'))
     rating = db.Column(db.Float, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
-    applications = db.relationship('Application', backref='job', lazy=True)
+    budget = db.Column(db.Float, nullable=True)
+    expected_duration = db.Column(db.String(50), nullable=True)
+    required_skills = db.Column(db.String(200), nullable=True)
+    applications = db.relationship('Application', back_populates='job', lazy=True)
     reviews = db.relationship('Review', backref='job', lazy=True)
+    pictures = db.relationship('JobPicture', backref='job', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
         return f'<Job {self.title}>'
+
+class JobPicture(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(255), nullable=False)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
 
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
     worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date_applied = db.Column(db.DateTime, default=func.now(), nullable=False)
-    status = db.Column(db.String(20), nullable=True)
+    status = db.Column(db.Enum(ApplicationStatus), default=ApplicationStatus.PENDING, nullable=False)
+
+    job = db.relationship('Job', back_populates='applications', lazy=True)
+    applicant = db.relationship('User', back_populates='applications', lazy=True)
 
     def __repr__(self):
         return f'<Application {self.id} for Job {self.job_id}>'
-
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)

@@ -1,3 +1,4 @@
+<!-- templates/auth/login.html -->
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
@@ -6,18 +7,28 @@
         <h3 class="text-center mb-4">Login</h3>
         <form method="POST" action="{{ url_for('auth.login') }}">
             {{ form.hidden_tag() }}
-            <div class="form-group">
+            <div class="form-group mb-3">
                 {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control") }}
+                {{ form.email(class="form-control", placeholder="Enter your email") }}
+                {% for error in form.email.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-control") }}
+                {{ form.password(class="form-control", placeholder="Enter your password") }}
+                {% for error in form.password.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-check mb-3">
+                {{ form.remember_me(class="form-check-input") }}
+                {{ form.remember_me.label(class="form-check-label") }}
             </div>
             <div class="form-group text-center">
-                {{ form.submit(class="btn btn-primary btn-block") }}
+                {{ form.submit(class="btn btn-primary btn-block w-100") }}
             </div>
-            <div class="text-center">
+            <div class="text-center mt-3">
                 <a href="{{ url_for('auth.sign_up') }}">Don't have an account? Sign Up</a>
             </div>
         </form>

@@ -7,10 +7,16 @@
             <h5 class="card-title">{{ job.title }}</h5>
             <p class="job-description">{{ job.description }}</p>
             <p><small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small></p>
+            <p><small>Budget: {{ job.budget }}</small></p>
+            <p><small>Expected Duration: {{ job.expected_duration }}</small></p>
+            <p><small>Required Skills: {{ job.required_skills }}</small></p>
+            <div class="job-status">
+                <span class="badge badge-{{ job.status.name|lower }}">{{ job.status.value }}</span>
+            </div>
             <div class="job-pictures">
                 {% if job.pictures %}
-                    {% for picture in job.pictures.split(',') %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ picture) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    {% for picture in job.pictures %}
+                        <img src="{{ url_for('static', filename='uploads/' + picture.filename) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
                     {% endfor %}
                 {% endif %}
             </div>
@@ -19,13 +25,15 @@
                 {% for application in applications %}
                     <li class="list-group-item">
                         <div class="application-header">
-                            <img src="{{ url_for('static', filename='profile_pics/' ~ application.worker.profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px;">
-                            <a href="{{ url_for('profile.view_profile', user_id=application.worker.id) }}">{{ application.worker.first_name }} {{ application.worker.last_name }}</a>
-                            <p>{{ application.worker.brief_description }}</p>
-                            <form method="POST" action="{{ url_for('job.accept_application', application_id=application.id) }}" class="d-inline">
-                                {{ form.hidden_tag() }}  <!-- Ensure CSRF token is included -->
-                                <button type="submit" class="btn btn-success">Accept</button>
-                            </form>
+                            <img src="{{ url_for('static', filename='profile_pics/' + application.applicant.profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px;">
+                            <a href="{{ url_for('profile.view_profile', user_id=application.worker_id) }}">{{ application.applicant.first_name }} {{ application.applicant.last_name }}</a>
+                            <p>{{ application.applicant.brief_description }}</p>
+                            {% if job.status == ApplicationStatus.OPEN %}
+                                <form method="POST" action="{{ url_for('job.accept_application', job_id=job.id, application_id=application.id) }}" class="d-inline">
+                                    {{ accept_form.hidden_tag() }}
+                                    <button type="submit" class="btn btn-success">Accept</button>
+                                </form>
+                            {% endif %}
                         </div>
                     </li>
                 {% endfor %}
@@ -33,6 +41,14 @@
                     <li class="list-group-item">No applications yet</li>
                 {% endif %}
             </ul>
+            {% if job.status == ApplicationStatus.IN_PROGRESS %}
+                <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}">
+                    {{ form.hidden_tag() }}
+                    <button type="submit" class="btn btn-primary mt-3">Finish Job</button>
+                </form>
+            {% elif job.status == ApplicationStatus.COMPLETED and not job.reviews %}
+                <a href="{{ url_for('job.rate_workers', job_id=job.id) }}" class="btn btn-primary mt-3">Rate Job</a>
+            {% endif %}
         </div>
     </div>
 </div>

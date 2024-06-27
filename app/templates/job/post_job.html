@@ -1,3 +1,4 @@
+<!-- templates/job/post_job.html -->
 {% extends "base.html" %}
 {% block title %}Post a Job{% endblock %}
 {% block content %}
@@ -8,22 +9,58 @@
         <div class="form-group">
             {{ form.title.label(class="form-label") }}
             {{ form.title(class="form-control") }}
+            {% for error in form.title.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.description.label(class="form-label") }}
             {{ form.description(class="form-control") }}
+            {% for error in form.description.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.profession.label(class="form-label") }}
             {{ form.profession(class="form-control") }}
+            {% for error in form.profession.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.location.label(class="form-label") }}
             {{ form.location(class="form-control") }}
+            {% for error in form.location.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.budget.label(class="form-label") }}
+            {{ form.budget(class="form-control") }}
+            {% for error in form.budget.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.expected_duration.label(class="form-label") }}
+            {{ form.expected_duration(class="form-control") }}
+            {% for error in form.expected_duration.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.required_skills.label(class="form-label") }}
+            {{ form.required_skills(class="form-control") }}
+            {% for error in form.required_skills.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.pictures.label(class="form-label") }}
             {{ form.pictures(class="form-control-file", multiple=True) }}
+            {% for error in form.pictures.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="text-center">
             {{ form.submit(class="btn btn-primary btn-submit") }}

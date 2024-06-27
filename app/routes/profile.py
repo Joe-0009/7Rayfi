@@ -1,3 +1,4 @@
+#profile.py
 import os
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from flask_login import login_required, current_user
@@ -35,6 +36,7 @@ def view_profile(user_id):
     average_rating = db.session.query(func.avg(Review.rating)).filter_by(reviewee_id=user_id).scalar() or 0
     applied_jobs = Application.query.filter_by(worker_id=user_id).all()
     posted_jobs = Job.query.filter_by(poster_id=user_id).all()
+    reviews = Review.query.filter_by(reviewee_id=user_id).all()
     
     return render_template('profile/profile.html', 
                            profile_user=profile_user, 
@@ -43,7 +45,8 @@ def view_profile(user_id):
                            add_experience_form=AddExperienceForm(),
                            form=DummyForm(), 
                            applied_jobs=applied_jobs,
-                           posted_jobs=posted_jobs)
+                           posted_jobs=posted_jobs,
+                           )
 
 @profile.route('/update-profile', methods=['GET', 'POST'])
 @login_required

@@ -1,30 +1,14 @@
-<!-- Rating Modal -->
-<div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}">
-                {{ form.hidden_tag() }}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ratingModalLabel">Rate the Worker</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="rating">Rating</label>
-                        <input type="number" class="form-control" name="rating" min="1" max="5" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="review">Review</label>
-                        <textarea class="form-control" name="review" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit Review</button>
-                </div>
-            </form>
+<!-- reviews.html -->
+<h3>Reviews</h3>
+{% if reviews %}
+    {% for review in reviews %}
+        <div class="review">
+            <p>Rating: {{ review.rating }}/5</p>
+            <p>Comment: {{ review.comment }}</p>
+            <p>By: {{ review.reviewer.username }}</p>
+            <p>For Job: {{ review.job.title }}</p>
         </div>
-    </div>
-</div>
+    {% endfor %}
+{% else %}
+    <p>No reviews yet.</p>
+{% endif %}

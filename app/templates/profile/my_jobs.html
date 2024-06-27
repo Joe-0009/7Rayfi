@@ -36,7 +36,7 @@
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this job?')">Delete</button>
                                         </form>
                                         {% if job.status == 'In Progress' %}
-                                            <a href="{{ url_for('job.finish_job', job_id=job.id) }}" class="btn btn-success btn-sm">Finish & Rate</a>
+                                            <a href="{{ url_for('job.finish_job', job_id=job.id) }}" class="btn btn-success btn-sm" >Finish & Rate</a>
                                         {% endif %}
                                     </div>
                                 </li>

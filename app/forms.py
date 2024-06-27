@@ -1,5 +1,6 @@
+#forms.py
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, DateField, MultipleFileField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, DateField, MultipleFileField, IntegerField, FloatField, BooleanField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError, NumberRange
 from .models import User
 from flask_wtf.file import FileAllowed
@@ -39,6 +40,8 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=50)])
     password1 = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
     password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password1')])
+    first_name = StringField('First Name')  # Add this line
+    last_name = StringField('Last Name')    # Add this line
     submit = SubmitField('Sign Up')
 
     def validate_email(self, email):
@@ -55,6 +58,7 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
 # Update Profile Form
@@ -70,13 +74,18 @@ class UpdateProfileForm(FlaskForm):
     submit = SubmitField('Update Profile')
 
 # Job Form
+# forms.py
 class JobForm(FlaskForm):
-    title = StringField('Job Title', validators=[DataRequired(), Length(min=2, max=100)])
-    description = TextAreaField('Job Description', validators=[DataRequired(), Length(min=10)])
-    profession = SelectField('Profession', choices=PROFESSIONS, validators=[DataRequired()])
-    location = SelectField('Location', choices=MOROCCAN_CITIES, validators=[DataRequired()])
+    title = StringField('Job Title', validators=[DataRequired(message="Title is required."), Length(min=2, max=100)])
+    description = TextAreaField('Job Description', validators=[DataRequired(message="Description is required."), Length(min=10)])
+    profession = SelectField('Profession', choices=PROFESSIONS, validators=[DataRequired(message="Profession is required.")])
+    location = SelectField('Location', choices=MOROCCAN_CITIES, validators=[DataRequired(message="Location is required.")])
+    budget = FloatField('Budget', validators=[DataRequired(message="Budget is required and must be a number.")])
+    expected_duration = StringField('Expected Duration', validators=[DataRequired(message="Expected duration is required."), Length(max=50)])
+    required_skills = StringField('Required Skills', validators=[DataRequired(message="Required skills are required."), Length(max=200)])
     pictures = MultipleFileField('Job Pictures', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField('Post Job')
+
 
 # Search Workers Form
 class SearchWorkersForm(FlaskForm):
@@ -101,6 +110,7 @@ class DummyForm(FlaskForm):
 # Rating Form for rating jobs
 class RatingForm(FlaskForm):
     rating = IntegerField('Rating (1-5)', validators=[DataRequired(), NumberRange(min=1, max=5)])
+    review = TextAreaField('Review', validators=[DataRequired(), Length(min=10)])
     submit = SubmitField('Submit Rating')
 
 # Application Form for applying to jobs
