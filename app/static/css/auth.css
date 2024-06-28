@@ -2,57 +2,57 @@
 
 .login-container, .signup-container {
     height: 100vh;
-    background-color: #081b29;
+    background-color: var(--background-color);
 }
 
 .login-card, .signup-card {
     max-width: 400px;
     width: 100%;
-    background-color: #1c2b3a;
+    background-color: var(--secondary-color);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h3.text-center {
-    color: #00abf0;
+    color: var(--primary-color);
     margin-bottom: 20px;
 }
 
 .form-label {
     font-weight: 600;
-    color: #ededed;
+    color: var(--text-color);
 }
 
 .form-control {
-    background-color: #081b29;
-    border: 1px solid #00abf0;
-    color: #ededed;
+    background-color: var(--background-color);
+    border: 1px solid var(--input-border-color);
+    color: var(--text-color);
 }
 
 .form-control::placeholder {
-    color: #b0b0b0;
+    color: var(--placeholder-color);
 }
 
 .form-control:focus {
-    background-color: #0a2c3c;
-    border-color: #00abf0;
-    color: #ededed;
+    background-color: var(--input-focus-background);
+    border-color: var(--input-border-color);
+    color: var(--text-color);
 }
 
 .btn-primary {
-    background-color: #00abf0;
-    border-color: #00abf0;
-    color: #081b29;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--background-color);
     transition: background-color 0.3s;
 }
 
 .btn-primary:hover {
-    background-color: #008bb0;
-    color: #fff;
+    background-color: var(--primary-hover-color);
+    color: var(--text-color);
 }
 
 .text-center a {
-    color: #00abf0;
+    color: var(--link-color);
     text-decoration: none;
 }
 

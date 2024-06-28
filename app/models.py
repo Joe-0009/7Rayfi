@@ -9,7 +9,9 @@ class ApplicationStatus(enum.Enum):
     IN_PROGRESS = "In Progress"
     COMPLETED = "Completed"
     CANCELED = "Canceled"
-
+    ACCEPTED = "Accepted"
+    REJECTED = "Rejected"
+    
 accepted_applicants = db.Table('accepted_applicants',
     db.Column('job_id', db.Integer, db.ForeignKey('job.id'), primary_key=True),
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
@@ -97,7 +99,7 @@ class Job(db.Model):
     status = db.Column(db.Enum(ApplicationStatus), default=ApplicationStatus.OPEN, nullable=False)
     date_posted = db.Column(db.DateTime, default=func.now(), nullable=False)
     poster_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    accepted_workers = db.relationship('User', secondary='accepted_applicants', backref=db.backref('accepted_jobs', lazy='dynamic'))
+    #accepted_workers = db.relationship('User', secondary='accepted_applicants', backref=db.backref('accepted_jobs', lazy='dynamic'))
     rating = db.Column(db.Float, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     budget = db.Column(db.Float, nullable=True)
@@ -116,11 +118,11 @@ class JobPicture(db.Model):
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
 
 class Application(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
     worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date_applied = db.Column(db.DateTime, default=func.now(), nullable=False)
-    status = db.Column(db.Enum(ApplicationStatus), default=ApplicationStatus.PENDING, nullable=False)
+    status = db.Column(db.Enum(ApplicationStatus), default=ApplicationStatus.IN_PROGRESS, nullable=False)
 
     job = db.relationship('Job', back_populates='applications', lazy=True)
     applicant = db.relationship('User', back_populates='applications', lazy=True)

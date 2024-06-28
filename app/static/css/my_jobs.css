@@ -1,108 +1,92 @@
 /* my_jobs.css */
 
+/* General container styling */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    margin-top: 20px;
 }
 
-h5.card-title {
-    color: #00abf0;
+/* Profile Header */
+.profile-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-name {
+    margin-top: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.profile-profession {
+    color: var(--secondary-text-color);
+}
+
+/* Profile Navigation Tabs */
+.nav-tabs {
     margin-bottom: 20px;
 }
 
-.job-card {
-    background-color: #1c2b3a;
-    border-radius: 10px;
-    padding: 20px;
-    border: 1px solid #00abf0;
-    transition: transform 0.3s, box-shadow 0.3s;
+.nav-tabs .nav-link {
+    color: var(--nav-link-color);
 }
 
-.job-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+.nav-tabs .nav-link.active {
+    color: var(--nav-link-active-color);
 }
 
-.job-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+/* Job Cards */
+.card {
+    margin-bottom: 15px;
 }
 
-.job-header .job-date {
-    font-size: 14px;
-    color: #ededed;
+.card-title a {
+    color: var(--nav-link-active-color);
+    text-decoration: none;
 }
 
-.job-header .fa-calendar {
-    margin-right: 5px;
+.card-title a:hover {
+    text-decoration: underline;
 }
 
-.job-title {
-    font-size: 20px;
-    color: #00abf0;
+.badge {
+    float: right;
 }
 
-.job-description {
-    font-size: 16px;
-    color: #ededed;
-    margin-bottom: 10px;
-}
-
-.job-pictures img {
-    margin-right: 10px;
-    margin-bottom: 10px;
-}
-
-.job-actions {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.btn-primary {
-    background-color: #00abf0;
-    border-color: #00abf0;
-    color: #081b29;
-    transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-    background-color: #008bb0;
-    color: #fff;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-.btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-}
-
-.text-success {
+.card-text {
     margin-top: 10px;
-    color: #28a745;
 }
 
-
-#listed-jobs {
-    background: transparent;
+small {
+    display: block;
+    margin-top: 5px;
 }
 
-.list-group {
-    background: transparent;
+.btn-sm {
+    margin-left: 5px;
 }
 
-#jobs {
-    background: transparent;
+.mt-3 {
+    margin-top: 15px !important;
 }
 
+/* List styling */
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
 
-#No-jobs-posted {
-    background: transparent;
+.list-unstyled li {
+    padding: 5px 0;
+}
+
+/* Alerts */
+.alert {
+    margin-top: 20px;
 }

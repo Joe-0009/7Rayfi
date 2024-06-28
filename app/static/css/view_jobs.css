@@ -1,4 +1,5 @@
 /* view_jobs.css */
+@import url('variables.css');
 
 .container {
     max-width: 1200px;
@@ -7,15 +8,15 @@
 }
 
 h2.text-center {
-    color: #00abf0;
+    color: var(--primary-color);
     margin-bottom: 20px;
 }
 
 .job-card {
-    background-color: #1c2b3a;
+    background-color: var(--secondary-color);
     border-radius: 10px;
     padding: 20px;
-    border: 1px solid #00abf0;
+    border: 1px solid var(--primary-color);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -33,7 +34,7 @@ h2.text-center {
 
 .job-header .job-date {
     font-size: 14px;
-    color: #ededed;
+    color: var(--text-color);
 }
 
 .job-header .fa-calendar {
@@ -42,12 +43,12 @@ h2.text-center {
 
 .card-title {
     font-size: 20px;
-    color: #00abf0;
+    color: var(--primary-color);
 }
 
 .card-text {
     font-size: 16px;
-    color: #ededed;
+    color: var(--text-color);
     margin-bottom: 10px;
 }
 
@@ -63,28 +64,28 @@ h2.text-center {
 }
 
 .btn-primary {
-    background-color: #00abf0;
-    border-color: #00abf0;
-    color: #081b29;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--background-color);
     transition: background-color 0.3s;
 }
 
 .btn-primary:hover {
-    background-color: #008bb0;
-    color: #fff;
+    background-color: var(--primary-hover-color);
+    color: var(--text-color);
 }
 
 .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: var(--button-danger);
+    border-color: var(--button-danger);
 }
 
 .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: var(--button-success);
+    border-color: var(--button-success);
 }
 
 .text-success {
     margin-top: 10px;
-    color: #28a745;
+    color: var(--button-success);
 }

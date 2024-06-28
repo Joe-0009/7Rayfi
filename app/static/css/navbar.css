@@ -1,18 +1,19 @@
 /* navbar.css */
+@import url('variables.css');
 
 .navbar {
-    background-color: #1c2b3a;
+    background-color: var(--secondary-color);
 }
 
 .navbar-brand {
-    color: #00abf0;
+    color: var(--primary-color);
     font-size: 25px;
     font-weight: 600;
 }
 
 .navbar-toggler {
-    border-color: #00abf0;
-    color: #00abf0;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .navbar-toggler-icon {
@@ -29,7 +30,7 @@
     display: block;
     width: 100%;
     height: 2px;
-    background-color: #00abf0;
+    background-color: var(--primary-color);
     position: absolute;
     transition: all 0.3s;
 }
@@ -52,7 +53,7 @@
 }
 
 .navbar-nav .nav-item .nav-link {
-    color: #ededed;
+    color: var(--text-color);
     font-size: 18px;
     font-weight: 500;
     margin-left: 15px;
@@ -61,7 +62,7 @@
 
 .navbar-nav .nav-item .nav-link:hover,
 .navbar-nav .nav-item .nav-link.active {
-    color: #00abf0;
+    color: var(--primary-color);
 }
 
 @media (max-width: 992px) {

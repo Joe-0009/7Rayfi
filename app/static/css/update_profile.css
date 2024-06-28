@@ -1,16 +1,17 @@
 /* update_profile.css */
+@import url('variables.css');
 
 .update-profile-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #1c2b3a;
+    background-color: var(--secondary-color);
     border-radius: 10px;
-    color: #ededed;
+    color: var(--text-color);
 }
 
 h2.text-center {
-    color: #00abf0;
+    color: var(--primary-color);
     margin-bottom: 20px;
 }
 
@@ -20,35 +21,35 @@ h2.text-center {
 
 .update-profile-form .form-label {
     font-weight: 600;
-    color: #ededed;
+    color: var(--text-color);
 }
 
-.update-profile-form .form-control, 
+.update-profile-form .form-control,
 .update-profile-form .form-control-file {
-    background-color: #081b29;
-    border: 1px solid #00abf0;
-    color: #ededed;
+    background-color: var(--background-color);
+    border: 1px solid var(--input-border-color);
+    color: var(--text-color);
 }
 
 .update-profile-form .form-control::placeholder {
-    color: #b0b0b0;
+    color: var(--placeholder-color);
 }
 
-.update-profile-form .form-control:focus, 
+.update-profile-form .form-control:focus,
 .update-profile-form .form-control-file:focus {
-    background-color: #0a2c3c;
-    border-color: #00abf0;
-    color: #ededed;
+    background-color: var(--input-focus-background);
+    border-color: var(--input-border-color);
+    color: var(--text-color);
 }
 
 .update-profile-form .btn-submit {
-    background-color: #00abf0;
-    border-color: #00abf0;
-    color: #081b29;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--background-color);
     transition: background-color 0.3s;
 }
 
 .update-profile-form .btn-submit:hover {
-    background-color: #008bb0;
-    color: #fff;
+    background-color: var(--primary-hover-color);
+    color: var(--text-color);
 }

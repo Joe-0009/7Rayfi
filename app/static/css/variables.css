@@ -1,0 +1,20 @@
+
+
+/* variables.css */
+:root {
+    --primary-color: #00abf0;
+    --primary-hover-color: #008bb0;
+    --secondary-color: #1c2b3a;
+    --background-color: #081b29;
+    --text-color: #ededed;
+    --placeholder-color: #b0b0b0;
+    --input-focus-background: #0a2c3c;
+    --input-border-color: #00abf0;
+    --link-color: #00abf0;
+    --link-hover-color: #008bb0;
+    --button-danger: #dc3545;
+    --button-success: #28a745;
+    --secondary-text-color: #6c757d;
+    --nav-link-color: #495057;
+    --nav-link-active-color: #007bff;
+}

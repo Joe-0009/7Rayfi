@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from ..forms import UpdateProfileForm, AddSkillForm, AddExperienceForm, DummyForm
-from ..models import User, Skill, Experience, Certification, Job, Review, Application
+from ..models import User, Skill, Experience, Job, Review, Application, ApplicationStatus
 from .. import db
 from sqlalchemy.sql import func
 from PIL import Image
@@ -46,7 +46,8 @@ def view_profile(user_id):
                            form=DummyForm(), 
                            applied_jobs=applied_jobs,
                            posted_jobs=posted_jobs,
-                           )
+                           reviews=reviews,
+                           ApplicationStatus=ApplicationStatus)
 
 @profile.route('/update-profile', methods=['GET', 'POST'])
 @login_required

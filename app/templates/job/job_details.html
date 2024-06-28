@@ -21,11 +21,11 @@
                 {% endif %}
             </div>
             <h6 class="mt-4">Applications</h6>
-            <ul class="list-group">
+            <ul class="list-group" id="applicant">
                 {% for application in applications %}
-                    <li class="list-group-item">
+                    <li class="list-group-item" id="applicant">
                         <div class="application-header">
-                            <img src="{{ url_for('static', filename='profile_pics/' + application.applicant.profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px;">
+                            <img src="{{ url_for('static', filename='profile_pics/' + (application.applicant.profile_picture or 'default.png')) }}" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px;">
                             <a href="{{ url_for('profile.view_profile', user_id=application.worker_id) }}">{{ application.applicant.first_name }} {{ application.applicant.last_name }}</a>
                             <p>{{ application.applicant.brief_description }}</p>
                             {% if job.status == ApplicationStatus.OPEN %}

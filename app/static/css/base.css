@@ -1,6 +1,7 @@
+/* base.css */
 body {
-    background-color: #081b29;
-    color: #ededed;
+    background-color: var(--background-color);
+    color: var(--text-color);
     font-family: 'Poppins', sans-serif;
 }
 
@@ -10,9 +11,9 @@ body {
 }
 
 a {
-    color: #00abf0;
+    color: var(--link-color);
 }
 
 a:hover {
-    color: #008bb0;
+    color: var(--link-hover-color);
 }

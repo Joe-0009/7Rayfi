@@ -17,3 +17,14 @@ SQLAlchemy==2.0.31
 typing_extensions==4.12.2
 Werkzeug==3.0.3
 WTForms==3.1.2
+
+# Additional common packages
+gunicorn==20.1.0            # WSGI HTTP Server for UNIX
+requests==2.31.0            # Simple HTTP library
+pandas==2.0.3               # Data analysis library
+numpy==1.24.3               # Fundamental package for array computing
+scipy==1.11.2               # Library for scientific computing
+matplotlib==3.7.2           # Plotting library
+flask-cors==3.1.1           # Handling Cross-Origin Resource Sharing (CORS)
+flask-restful==0.3.9        # For creating REST APIs
+pytest==7.3.2               # Testing framework
