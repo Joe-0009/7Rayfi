@@ -1,104 +1,172 @@
 /* profile.css */
-@import url('variables.css');
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: var(--secondary-color);
-    border-radius: 10px;
-    color: var(--text-color);
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
 }
 
-.profile-header {
-    background-color: var(--background-color);
+/* Profile container */
+.profile {
     padding: 20px;
-    border-radius: 10px;
+}
+
+/* Profile Header Section */
+.profile-header-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding: 60px 20px;
     text-align: center;
+    position: relative;
 }
 
-.profile-header img {
-    width: 100px;
-    height: 100px;
+.profile-header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+}
+
+.profile-header-content {
+    max-width: 600px;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+.profile-header-content .profile-img {
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    border: 2px solid var(--primary-color);
+    object-fit: cover;
+    border: 2px solid #fff;
+    position: relative;
+    z-index: 1;
 }
 
-.profile-header h2 {
-    color: var(--primary-color);
+.profile-header-content .profile-name {
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-header-content .profile-profession {
+    font-size: 18px;
+    font-weight: 300;
     margin-top: 10px;
+    position: relative;
+    z-index: 1;
 }
 
-.profile-header p {
-    margin-bottom: 5px;
-}
-
-.profile-header .profile-email,
-.profile-header .profile-location,
-.profile-header .profile-profession,
-.profile-header .profile-age {
-    color: var(--text-color);
-}
-
-.nav-tabs .nav-link {
-    color: var(--primary-color);
-    background-color: var(--background-color);
-    border: 1px solid var(--primary-color);
-}
-
-.nav-tabs .nav-link.active {
-    color: var(--background-color);
-    background-color: var(--primary-color);
-}
-
-.tab-content {
+/* Profile Navigation Tabs */
+.profile-nav {
     margin-top: 20px;
 }
 
-.card {
+.profile-nav .nav-link {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--secondary-color);
+    padding: 10px 20px;
+    border: 1px solid var(--border-color);
     background-color: var(--background-color);
-    border: none;
-    border-radius: 10px;
 }
 
-.card-body {
-    color: var(--text-color);
+.profile-nav .nav-link.active {
+    color: var(--primary-color);
+    background-color: var(--background-color);
+    border-color: var(--border-color) var(--border-color) transparent;
 }
 
-.card-title {
+.profile-nav .nav-link:hover {
     color: var(--primary-color);
 }
 
-.card-text {
-    color: var(--text-color);
+/* Tab Content Sections */
+.tab-content {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Feature Cards */
+.card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+/* Skills and Experience Lists */
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
 }
 
 .list-unstyled li {
     margin-bottom: 10px;
 }
 
-.btn-link {
-    color: var(--primary-color);
+/* Button styling */
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin: 0 10px;
 }
 
 .btn-primary {
     background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: var(--background-color);
+    color: #fff;
 }
 
 .btn-primary:hover {
     background-color: var(--primary-hover-color);
-    border-color: var(--primary-hover-color);
-    color: var(--text-color);
 }
 
-.btn-danger {
-    background-color: var(--button-danger);
-    border-color: var(--button-danger);
+.btn-secondary {
+    background-color: #333;
+    color: #fff;
 }
 
-.btn-success {
-    background-color: var(--button-success);
-    border-color: var(--button-success);
+.btn-secondary:hover {
+    background-color: #1a1a1a;
+}
+
+/* Feature Images */
+.feature-image {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }

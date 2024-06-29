@@ -1,0 +1,42 @@
+/* profile_overview.css */
+
+/* Container for profile overview section */
+.profile-overview-container {
+    margin-top: 20px;
+}
+
+/* Card styles for basic info, about me, skills, experience, and certifications */
+.profile-overview-container .profile-card {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Card body styling */
+.profile-overview-container .card-body {
+    padding: 15px;
+}
+
+/* Card title styling */
+.profile-overview-container .card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Text styling */
+.profile-overview-container .card-text {
+    margin-bottom: 10px;
+}
+
+/* Skills and experiences list styling */
+.profile-overview-container .list-unstyled {
+    padding-left: 15px;
+    margin-top: 10px;
+}
+
+/* Add skill and experience form styling */
+.profile-overview-container .input-group {
+    margin-top: 10px;
+}

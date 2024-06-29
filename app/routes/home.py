@@ -6,7 +6,7 @@ from .. import db
 
 home = Blueprint('home', __name__)
 
-@home.route('/', methods=['GET', 'POST'])
+@home.route('', methods=['GET', 'POST'])
 def index():
     
         

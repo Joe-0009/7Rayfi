@@ -2,21 +2,74 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <div class="home">
-    <div class="home-content">
-        <h1>Hi, I'm 7Rayfi</h1>
-        <h3>web application</h3>
-        <p>designed to connect users seeking specific services with professionals 
-            offering those services.The platform allows users to post job listings,
-             apply for jobs, and manage their profiles. Key features include user 
-             authentication,job posting and application functionalities, profile 
-             management, and a search function for finding workers based on location 
-             and profession.
-        <div class="btn-box">
-            <a href="{{ url_for('auth.login') }}">Login</a>
-            <a href="{{ url_for('auth.sign_up') }}">Sign-up</a>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to 7iRafi</h1>
+            <p>Your Trusted Service Connection</p>
+            <div class="btn-box">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login</a>
+                <a href="{{ url_for('auth.sign_up') }}" class="btn btn-secondary">Sign-up</a>
+            </div>
         </div>
-        </p>
-    </div>
+        <img src="{{ url_for('static', filename='images/hero_image.jpg') }}" alt="Hero Image" class="hero-image">
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2>Key Features</h2>
+            <div class="feature">
+                <img src="{{ url_for('static', filename='images/feature1.jpg') }}" alt="Feature 1" class="feature-image">
+                <div class="feature-content">
+                    <h3>Job Posting</h3>
+                    <p>Post job listings easily and find the right professionals for your tasks.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <img src="{{ url_for('static', filename='images/feature2.jpg') }}" alt="Feature 2" class="feature-image">
+                <div class="feature-content">
+                    <h3>Profile Management</h3>
+                    <p>Manage your profile, showcase your skills and experience, and get hired.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <img src="{{ url_for('static', filename='images/feature3.jpg') }}" alt="Feature 3" class="feature-image">
+                <div class="feature-content">
+                    <h3>Search Functionality</h3>
+                    <p>Search for workers based on location and profession, and find the best match for your needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2>What Our Users Say</h2>
+            <div class="testimonial">
+                <img src="{{ url_for('static', filename='images/testimonial1.jpg') }}" alt="Testimonial 1" class="testimonial-image">
+                <p>"7iRafi helped me find the perfect professional for my home renovation project!"</p>
+                <span>- User 1</span>
+            </div>
+            <div class="testimonial">
+                <img src="{{ url_for('static', filename='images/testimonial2.jpg') }}" alt="Testimonial 2" class="testimonial-image">
+                <p>"As a freelancer, 7iRafi has been a game changer for finding consistent work."</p>
+                <span>- User 2</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="call-to-action">
+        <div class="container">
+            <h2>Join 7iRafi Today</h2>
+            <p>Whether you're looking to hire or get hired, 7iRafi is the platform for you.</p>
+            <div class="btn-box">
+                <a href="{{ url_for('auth.sign_up') }}" class="btn btn-primary">Sign Up Now</a>
+            </div>
+        </div>
+    </section>
 </div>
 
 {% block javascript %}

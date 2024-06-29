@@ -1,3 +1,4 @@
+<!-- base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,24 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/update_profile.css') }}">  
     <link rel="stylesheet" href="{{ url_for('static', filename='css/view_jobs.css') }}">  
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_jobs.css') }}">  
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">  
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_details.css') }}">  
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_details.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search_workers.css') }}">
 
+    
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="{{ url_for('home.index') }}">7Rayfi</a>
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"> 7iRafi
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"><i class="fa fa-bars"></i></span>
         </button>
         <div class="collapse navbar-collapse" id="navbar">
             <div class="navbar-nav ml-auto">
