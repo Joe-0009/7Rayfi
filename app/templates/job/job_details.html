@@ -30,8 +30,8 @@
                             <p>{{ application.applicant.brief_description }}</p>
                             {% if job.status == ApplicationStatus.OPEN %}
                                 <form method="POST" action="{{ url_for('job.accept_application', job_id=job.id, application_id=application.id) }}" class="d-inline">
-                                    {{ accept_form.hidden_tag() }}
-                                    <button type="submit" class="btn btn-success">Accept</button>
+                                    {{ form.hidden_tag() }}
+                                    {{ form.submit(class="btn btn-success") }}
                                 </form>
                             {% endif %}
                         </div>
@@ -47,7 +47,7 @@
                     <button type="submit" class="btn btn-primary mt-3">Finish Job</button>
                 </form>
             {% elif job.status == ApplicationStatus.COMPLETED and not job.reviews %}
-                <a href="{{ url_for('job.rate_workers', job_id=job.id) }}" class="btn btn-primary mt-3">Rate Job</a>
+                <a href="{{ url_for('job.rate_job', job_id=job.id) }}" class="btn btn-primary mt-3">Rate Job</a>
             {% endif %}
         </div>
     </div>

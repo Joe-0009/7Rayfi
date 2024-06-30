@@ -63,7 +63,7 @@ def post_job():
 
         db.session.commit()
         flash('Your job has been posted!', 'success')
-        return redirect(url_for('home.index'))
+        return redirect(url_for('job.view_jobs' ))
     return render_template('job/post_job.html', title='Post a Job', form=form)
 
 @job.route('/jobs')
@@ -109,7 +109,7 @@ def finish_job(job_id):
     job = Job.query.get_or_404(job_id)
 
     if job.poster_id != current_user.id:
-        flash('You do not have permission to finish this job', 'danger')
+        flash('You do not have permission to finish this job', 'error')
         return redirect(url_for('job.job_details', job_id=job_id))
 
     if job.status != ApplicationStatus.IN_PROGRESS:
@@ -119,7 +119,8 @@ def finish_job(job_id):
     job.status = ApplicationStatus.COMPLETED
     db.session.commit()
     flash('Job marked as finished. Please rate the workers.', 'success')
-    return redirect(url_for('job.rate_workers', job_id=job_id))
+    return redirect(url_for('job.rate_job', job_id=job_id))
+
 
 @job.route('/rate-job/<int:job_id>', methods=['GET', 'POST'])
 @login_required
@@ -128,25 +129,44 @@ def rate_job(job_id):
     if job.status != ApplicationStatus.COMPLETED:
         flash('You can only rate a finished job', 'danger')
         return redirect(url_for('job.view_jobs'))
-
+    
+    # Get the accepted application for this job
+    accepted_application = Application.query.filter_by(job_id=job_id, status=ApplicationStatus.ACCEPTED).first()
+    
+    if not accepted_application:
+        flash('No accepted worker found for this job', 'danger')
+        return redirect(url_for('job.view_jobs'))
+    
     form = RatingForm()
     if form.validate_on_submit():
-        job.rating = form.rating.data
+        new_review = Review(
+            job_id=job.id,
+            reviewer_id=current_user.id,
+            reviewee_id=accepted_application.worker_id,
+            rating=form.rating.data,
+            comment=form.comment.data
+        )
+        db.session.add(new_review)
         db.session.commit()
         flash('Rating submitted successfully!', 'success')
         return redirect(url_for('job.view_jobs'))
+    
+    return render_template('job/rate_job.html', form=form, job=job, worker=accepted_application.applicant)
 
-    return render_template('job/rate_job.html', form=form, job=job)
 
 @job.route('/job_details/<int:job_id>', methods=['GET'])
 @login_required
 def job_details(job_id):
     job = Job.query.get_or_404(job_id)
     applications = Application.query.filter_by(job_id=job_id).all()
-    user_applied = Application.query.filter_by(job_id=job_id, worker_id=current_user.id).first() is not None
-    accept_form = AcceptApplicationForm()
-    return render_template('job/job_details.html', job=job, applications=applications, accept_form=accept_form, user_applied=user_applied, ApplicationStatus=ApplicationStatus)
-
+    form = AcceptApplicationForm()
+    
+    return render_template('job/job_details.html', 
+                           job=job, 
+                           applications=applications, 
+                           form=form,
+                           ApplicationStatus=ApplicationStatus)
+    
 @job.route('/accept-application/<int:job_id>/<int:application_id>', methods=['POST'])
 @login_required
 def accept_application(job_id, application_id):
@@ -161,50 +181,16 @@ def accept_application(job_id, application_id):
         flash('This application does not belong to this job.', 'error')
         return redirect(url_for('job.job_details', job_id=job_id))
 
-    # Check if the applicant is already accepted
-    existing_acceptance = db.session.query(accepted_applicants).filter_by(job_id=job_id, user_id=application.worker_id).first()
-    if existing_acceptance:
-        flash('This applicant has already been accepted for this job.', 'error')
+    if job.status != ApplicationStatus.OPEN:
+        flash('This job is not open for applications.', 'error')
         return redirect(url_for('job.job_details', job_id=job_id))
-
-    # Accept the application
-    job.accepted_workers.append(application.applicant)
+    
     application.status = ApplicationStatus.ACCEPTED
-    try:
-        db.session.commit()
-        flash('Application accepted successfully!', 'success')
-    except IntegrityError:
-        db.session.rollback()
-        flash('Error: This applicant has already been accepted for this job.', 'error')
-
+    job.status = ApplicationStatus.IN_PROGRESS
+    db.session.commit()
+    
+    flash('Application accepted successfully!', 'success')
     return redirect(url_for('job.job_details', job_id=job_id))
 
 
-@job.route('/rate-workers/<int:job_id>', methods=['GET', 'POST'])
-@login_required
-def rate_workers(job_id):
-    job = Job.query.get_or_404(job_id)
-    if job.poster_id != current_user.id:
-        flash('You do not have permission to rate workers for this job', 'danger')
-        return redirect(url_for('job.job_details', job_id=job_id))
 
-    if job.status != ApplicationStatus.COMPLETED:
-        flash('You can only rate workers for completed jobs', 'warning')
-        return redirect(url_for('job.job_details', job_id=job_id))
-
-    form = RatingForm()
-    if form.validate_on_submit():
-        for worker in job.accepted_workers:
-            new_review = Review(
-                reviewer_id=current_user.id,
-                reviewee_id=worker.id,
-                job_id=job.id,
-                rating=form.rating.data,
-                comment=form.review.data
-            )
-            db.session.add(new_review)
-        db.session.commit()
-        flash('Ratings submitted successfully!', 'success')
-        return redirect(url_for('job.job_details', job_id=job_id))
-
-    return render_template('job/rate_workers.html', form=form, job=job)

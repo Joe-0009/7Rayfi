@@ -110,7 +110,7 @@ class DummyForm(FlaskForm):
 # Rating Form for rating jobs
 class RatingForm(FlaskForm):
     rating = IntegerField('Rating (1-5)', validators=[DataRequired(), NumberRange(min=1, max=5)])
-    review = TextAreaField('Review', validators=[DataRequired(), Length(min=10)])
+    comment = TextAreaField('Comment', validators=[DataRequired()])
     submit = SubmitField('Submit Rating')
 
 # Application Form for applying to jobs
@@ -119,4 +119,4 @@ class ApplicationForm(FlaskForm):
 
 # Accept Application Form
 class AcceptApplicationForm(FlaskForm):
-    submit = SubmitField('Accept Application')
+    submit = SubmitField('Accept')

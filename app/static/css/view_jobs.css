@@ -8,9 +8,11 @@ body {
 
 /* View Jobs Container */
 .view-jobs-container {
-    padding: 20px; /* Adjusted padding to minimize white space */
-    background-color: transparent; /* Transparent to let the body background show */
-    margin: 0 auto; /* Center the container */
+    padding: 40px 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
     max-width: 1200px;
 }
 
@@ -27,7 +29,6 @@ body {
     transition: transform 0.3s, box-shadow 0.3s;
     background-color: #fff;
     border: none;
-    margin-bottom: 20px; /* Add margin between cards */
 }
 
 .job-card:hover {
@@ -110,8 +111,8 @@ body {
 }
 
 .job-actions .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: #007bff;
+    border-color: #007bff;
 }
 
 .job-actions .btn-primary {

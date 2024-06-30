@@ -70,9 +70,11 @@
                             <p>Application status: <span class="badge badge-{{ application.status.value|lower }}">{{ application.status.value }}</span></p>
                             
                             {% if application.job.status == ApplicationStatus.COMPLETED and application.status == ApplicationStatus.ACCEPTED %}
-                                <div class="job-actions">
-                                    <a href="{{ url_for('job.rate_job', job_id=application.job.id) }}" class="btn btn-sm btn-primary">Rate Job</a>
-                                </div>
+                                {% set review = application.job.reviews|selectattr("reviewee_id", "equalto", current_user.id)|first %}
+                                {% if review %}
+                                    <p>Your rating: {{ review.rating }}/5</p>
+                                    <p>Comment: {{ review.comment }}</p>
+                                {% endif %}
                             {% endif %}
                         </div>
                         {% endif %}

@@ -38,7 +38,7 @@
                                 {% if job.status.value == 'Open' %}
                                 <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="d-inline">
                                     {{ form.hidden_tag() }}
-                                    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to mark this job as finished?')"><i class="fa fa-check"></i> Finish</button>
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to mark this job as finished?')"><i class="fa fa-check"></i> See Applicants</button>
                                 </form>
                                 {% endif %}
                             </div>

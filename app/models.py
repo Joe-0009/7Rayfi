@@ -36,8 +36,10 @@ class User(db.Model, UserMixin):
     experiences = db.relationship('Experience', backref='user', lazy=True, cascade="all, delete-orphan")
     certifications = db.relationship('Certification', backref='user', lazy=True, cascade="all, delete-orphan")
     posted_jobs = db.relationship('Job', backref='poster', lazy=True, foreign_keys='Job.poster_id')
-    reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', backref='reviewee', lazy=True)
-    reviews_given = db.relationship('Review', foreign_keys='Review.reviewer_id', backref='reviewer', lazy=True)
+    
+    reviews_given = db.relationship('Review', foreign_keys='Review.reviewer_id', back_populates='reviewer')
+    reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', back_populates='reviewee')
+
     applications = db.relationship('Application', back_populates='applicant', lazy=True)
     accepted_jobs = db.relationship('Job', secondary=accepted_applicants, backref=db.backref('accepted_workers', lazy='dynamic'))
 
@@ -99,16 +101,15 @@ class Job(db.Model):
     status = db.Column(db.Enum(ApplicationStatus), default=ApplicationStatus.OPEN, nullable=False)
     date_posted = db.Column(db.DateTime, default=func.now(), nullable=False)
     poster_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    #accepted_workers = db.relationship('User', secondary='accepted_applicants', backref=db.backref('accepted_jobs', lazy='dynamic'))
-    rating = db.Column(db.Float, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     budget = db.Column(db.Float, nullable=True)
     expected_duration = db.Column(db.String(50), nullable=True)
     required_skills = db.Column(db.String(200), nullable=True)
+    
     applications = db.relationship('Application', back_populates='job', lazy=True)
-    reviews = db.relationship('Review', backref='job', lazy=True)
+    reviews = db.relationship('Review', back_populates='job', lazy=True)
     pictures = db.relationship('JobPicture', backref='job', lazy=True, cascade="all, delete-orphan")
-
+    
     def __repr__(self):
         return f'<Job {self.title}>'
 
@@ -129,6 +130,7 @@ class Application(db.Model):
 
     def __repr__(self):
         return f'<Application {self.id} for Job {self.job_id}>'
+
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
@@ -137,10 +139,15 @@ class Review(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text, nullable=True)
     date = db.Column(db.DateTime, default=func.now(), nullable=False)
-
+    
+    job = db.relationship('Job', back_populates='reviews')
+    reviewer = db.relationship('User', foreign_keys=[reviewer_id], back_populates='reviews_given')
+    reviewee = db.relationship('User', foreign_keys=[reviewee_id], back_populates='reviews_received')
+    
     def __repr__(self):
-        return f'<Review {self.id} by User {self.reviewer_id}>'
-
+        return f'<Review {self.id} by User {self.reviewer_id} for User {self.reviewee_id}>'
+    
+    
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
