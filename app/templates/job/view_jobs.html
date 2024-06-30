@@ -1,48 +1,55 @@
 {% extends "base.html" %}
 {% block title %}View Jobs{% endblock %}
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 view-jobs-container">
     <h2 class="text-center mb-4">Available Jobs</h2>
     <div class="row">
         {% for job in jobs %}
         <div class="col-md-6 mb-4">
             <div class="card job-card">
                 <div class="card-body">
-                    <div class="job-header">
+                    <div class="job-header d-flex justify-content-between align-items-center">
                         <div class="job-date">
                             <i class="fa fa-calendar"></i> {{ job.date_posted.strftime('%Y-%m-%d %H:%M') }}
                         </div>
-                        <h5 class="card-title">{{ job.title }}</h5>
+                        <span class="badge {% if job.status.value == 'Open' %}badge-success{% else %}badge-secondary{% endif %}">{{ job.status.value }}</span>
                     </div>
+                    <h5 class="card-title mt-2">{{ job.title }}</h5>
                     <p class="card-text">{{ job.description }}</p>
-                    <p><small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small></p>
-                    <div class="job-pictures">
+                    <p class="poster-info"><small><i class="fa fa-user"></i> Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small></p>
+                    <div class="job-pictures mb-3">
                         {% if job.pictures %}
-                            {% for picture in job.pictures %}
-                                <img src="{{ url_for('static', filename='uploads/' + picture.filename) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
-                            {% endfor %}
+                            <div class="d-flex flex-wrap">
+                                {% for picture in job.pictures %}
+                                    <img src="{{ url_for('static', filename='uploads/' + picture.filename) }}" alt="Job Picture" class="img-thumbnail job-image mr-2 mb-2" onclick="showImageModal('{{ url_for('static', filename='uploads/' + picture.filename) }}')">
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted"><i class="fa fa-image"></i> No pictures available</p>
                         {% endif %}
                     </div>
-                    <div class="job-actions mt-2">
+                    <div class="job-actions mt-3 d-flex justify-content-between">
                         {% if job.poster_id == current_user.id %}
-                            <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="d-inline">
-                                {{ form.hidden_tag() }}
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this job?')">Delete</button>
-                            </form>
-                            {% if job.status.value == 'Open' %}
-                            <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="d-inline">
-                                {{ form.hidden_tag() }}
-                                <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to mark this job as finished?')">Finish</button>
-                            </form>
-                            {% endif %}
+                            <div>
+                                <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="d-inline">
+                                    {{ form.hidden_tag() }}
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this job?')"><i class="fa fa-trash"></i> Delete</button>
+                                </form>
+                                {% if job.status.value == 'Open' %}
+                                <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="d-inline">
+                                    {{ form.hidden_tag() }}
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to mark this job as finished?')"><i class="fa fa-check"></i> Finish</button>
+                                </form>
+                                {% endif %}
+                            </div>
                         {% else %}
                             {% if job.status.value == 'Open' and current_user not in job.applicants %}
                             <form method="POST" action="{{ url_for('job.apply_job', job_id=job.id) }}" class="d-inline">
                                 {{ form.hidden_tag() }}
-                                <button type="submit" class="btn btn-primary">Apply</button>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Apply</button>
                             </form>
                             {% elif current_user in job.applicants %}
-                            <p class="text-success">You have applied for this job</p>
+                            <p class="text-success"><i class="fa fa-check-circle"></i> You have applied for this job</p>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -52,4 +59,32 @@
         {% endfor %}
     </div>
 </div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Job Picture</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="modalImage" src="" alt="Job Picture" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    function showImageModal(imageSrc) {
+        document.getElementById('modalImage').src = imageSrc;
+        $('#imageModal').modal('show');
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}

@@ -3,8 +3,7 @@
 {% block content %}
 <div class="profile">
     <!-- Profile Header Section -->
-    <section class="profile-header-section" style="background-image: url('{{ url_for('static', filename='images/profile_header.jpg') }}');">
-        <div class="profile-header-content">
+    <section class="profile-header-section" style="background-image: url('{{ url_for('static', filename='images/profile_header.jpg') }}')">        <div class="profile-header-content">
             <div class="profile-picture">
                 {% if profile_user and profile_user.profile_picture %}
                     <img src="{{ url_for('static', filename='profile_pics/' + profile_user.profile_picture) }}" alt="Profile Picture" class="profile-img">
