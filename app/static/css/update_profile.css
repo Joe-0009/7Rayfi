@@ -1,4 +1,15 @@
 /* Background for the update profile section */
+:root {
+    --primary-color: #f33f3f;
+    --primary-dark: #d63030;
+    --primary-light: #ff6b6b;
+    --secondary-color: #333333;
+    --background-light: #f8f8f8;
+    --text-color: #333333;
+    --border-color: #e0e0e0;
+}
+
+
 .update-profile-background {
     background-image: url('/static/images/edit_profile_background.jpg'); /* Ensure this path is correct */
     background-size: cover;

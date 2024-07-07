@@ -13,3 +13,10 @@
     --rejected-color: red; /* Red color for rejected status */
     --pending-color: #333333; /* Dark grey color for pending status */
 }
+
+/* base.css or global.css */
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Ensure to include your global CSS file in your base HTML template if not already included */

@@ -7,10 +7,14 @@
         <div class="hero-content">
             <h1>Welcome to 7iRafi</h1>
             <p>Your Trusted Service Connection</p>
+            
+            {% if not current_user.is_authenticated %}
             <div class="btn-box">
                 <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login</a>
                 <a href="{{ url_for('auth.sign_up') }}" class="btn btn-secondary">Sign-up</a>
             </div>
+            {% endif %}
+            
         </div>
         <img src="{{ url_for('static', filename='images/hero_image.jpg') }}" alt="Hero Image" class="hero-image">
     </section>
@@ -143,10 +147,5 @@
     </section>
 </div>
 
-{% block javascript %}
-<script type="text/javascript">
-    const csrf_token = "{{ csrf_token() }}";
-</script>
-<script src="{{ url_for('static', filename='js/home.js') }}"></script>
-{% endblock %}
+
 {% endblock %}

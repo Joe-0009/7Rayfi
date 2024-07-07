@@ -1,42 +1,87 @@
 /* profile_overview.css */
 
-/* Container for profile overview section */
-.profile-overview-container {
-    margin-top: 20px;
-}
-
-/* Card styles for basic info, about me, skills, experience, and certifications */
-.profile-overview-container .profile-card {
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.profile-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: 20px;
 }
 
-/* Card body styling */
-.profile-overview-container .card-body {
-    padding: 15px;
+.profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* Card title styling */
-.profile-overview-container .card-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
+.profile-card .card-title {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
 }
 
-/* Text styling */
-.profile-overview-container .card-text {
-    margin-bottom: 10px;
+.profile-card .card-text {
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
 }
 
-/* Skills and experiences list styling */
-.profile-overview-container .list-unstyled {
-    padding-left: 15px;
+.profile-card ul {
+    padding-left: 0;
+}
+
+.profile-card ul li {
+    margin-bottom: 0.5rem;
+}
+
+#add-skill-link, #add-experience-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+#add-skill-link:hover, #add-experience-link:hover {
+    color: var(--primary-hover-color);
+    text-decoration: underline;
+}
+
+#add-skill-form, #add-experience-form {
+    margin-top: 1rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
+}
+
+@media (max-width: 768px) {
+    .profile-card {
+        margin-bottom: 1rem;
+    }
+}
+/* Add this to your existing CSS */
+.add-skill-link {
+    display: inline-block;
     margin-top: 10px;
+    color: var(--primary-color);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
 }
 
-/* Add skill and experience form styling */
-.profile-overview-container .input-group {
+.add-skill-link:hover {
+    color: var(--primary-hover-color);
+    text-decoration: underline;
+}
+
+#add-skill-form {
     margin-top: 10px;
 }

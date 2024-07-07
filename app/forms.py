@@ -100,7 +100,11 @@ class AddSkillForm(FlaskForm):
 
 # Add Experience Form
 class AddExperienceForm(FlaskForm):
-    experience = StringField('Experience', validators=[DataRequired()])
+    experience = StringField('Experience Title', validators=[DataRequired()])
+    company = StringField('Company', validators=[DataRequired()])
+    start_date = DateField('Start Date', format='%Y-%m-%d', validators=[DataRequired()])
+    end_date = DateField('End Date', format='%Y-%m-%d', validators=[DataRequired()])
+    description = TextAreaField('Description')
     submit = SubmitField('Add Experience')
 
 # Dummy Form for generic actions like delete

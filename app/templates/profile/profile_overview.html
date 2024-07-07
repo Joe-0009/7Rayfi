@@ -30,13 +30,13 @@
                         <li>{{ skill.name }}</li>
                     {% endfor %}
                     {% if not profile_user.skills %}
-                        <li>No skills provided</li>
+                        <li id="no-skills">No skills provided</li>
                     {% endif %}
                 </ul>
                 {% if profile_user.id == current_user.id %}
-                <a href="#" id="add-skill-link" class="btn btn-link">+ Add Skill</a>
+                <a href="#" id="add-skill-link" class="btn btn-link add-skill-link">+ Add Skill</a>
                 <div id="add-skill-form" style="display: none;">
-                    <form method="POST" action="{{ url_for('profile.add_skill') }}">
+                    <form id="skill-form" method="POST" action="{{ url_for('profile.add_skill') }}">
                         {{ add_skill_form.hidden_tag() }}
                         <div class="input-group mb-3">
                             {{ add_skill_form.skill(class="form-control", placeholder="Enter new skill") }}
@@ -45,7 +45,7 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                </div>                
                 {% endif %}
             </div>
         </div>
@@ -56,28 +56,41 @@
                 <h5 class="card-title">Experience</h5>
                 <ul class="list-unstyled" id="experiences-list">
                     {% for experience in profile_user.experiences %}
-                        <li>{{ experience.title }} at {{ experience.company }} ({{ experience.duration }})</li>
+                        <li>{{ experience.title }} at {{ experience.company }} ({{ experience.start_date }} to {{ experience.end_date }})</li>
                     {% endfor %}
                     {% if not profile_user.experiences %}
-                        <li>No experience provided</li>
+                        <li id="no-experiences">No experience provided</li>
                     {% endif %}
                 </ul>
                 {% if profile_user.id == current_user.id %}
                 <a href="#" id="add-experience-link" class="btn btn-link">+ Add Experience</a>
                 <div id="add-experience-form" style="display: none;">
-                    <form method="POST" action="{{ url_for('profile.add_experience') }}">
+                    <form id="experience-form" method="POST" action="{{ url_for('profile.add_experience') }}">
                         {{ add_experience_form.hidden_tag() }}
                         <div class="input-group mb-3">
                             {{ add_experience_form.experience(class="form-control", placeholder="Enter new experience") }}
-                            <div class="input-group-append">
-                                {{ add_experience_form.submit(class="btn btn-primary") }}
-                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ add_experience_form.company(class="form-control", placeholder="Enter company name") }}
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ add_experience_form.start_date(class="form-control", placeholder="Enter start date (YYYY-MM-DD)") }}
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ add_experience_form.end_date(class="form-control", placeholder="Enter end date (YYYY-MM-DD)") }}
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ add_experience_form.description(class="form-control", placeholder="Enter description") }}
+                        </div>
+                        <div class="input-group-append">
+                            {{ add_experience_form.submit(class="btn btn-primary") }}
                         </div>
                     </form>
                 </div>
                 {% endif %}
             </div>
         </div>
+        
     </div>
 </div>
 <div class="row">

@@ -1,148 +1,149 @@
 /* my_jobs.css */
 
-/* General styles */
-body {
-    font-family: Arial, sans-serif;
-}
-
-/* My Jobs Container */
+/* Container for the jobs section */
 .my-jobs-container {
-    padding: 20px;
+    margin-top: 1.5rem;
 }
 
-/* Section styling */
-section {
-    margin-bottom: 40px;
+/* Page header styling */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
 }
 
-/* Card styles */
-.card {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-}
-
-.card-header {
-    background-color: var(--background-color);
-    border-bottom: 1px solid var(--border-color);
-    padding: 15px;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.card-body {
-    padding: 20px;
-}
-
-.job-item {
-    margin-bottom: 20px;
-    padding: 10px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.job-item:last-child {
-    border-bottom: none;
-}
-
-.job-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.job-description {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 5px;
-}
-
-.job-date {
-    font-size: 14px;
-    color: #999;
-    margin-bottom: 10px;
-}
-
-/* Badge styles */
-.badge {
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 14px;
-    color: #fff;
-}
-
-.badge-open {
-    background-color: var(--primary-color);
-}
-
-.badge-in_progress {
-    background-color: var(--secondary-color);
-}
-
-.badge-completed {
-    background-color: var(--success-color);
-}
-
-.badge-pending {
-    background-color: var(--warning-color);
-}
-
-.badge-rejected {
-    background-color: var(--danger-color);
-}
-
-/* Applicants list */
-.applicants-list {
-    list-style: none;
-    padding-left: 0;
-    margin-bottom: 10px;
-}
-
-.applicants-list li {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-/* Job actions */
-.job-actions {
-    margin-top: 10px;
-}
-
-.job-actions .btn {
-    margin-right: 5px;
+/* Page title styling */
+.page-title {
+    color: var(--primary-color);
+    font-size: 1.75rem;
 }
 
 /* Button styling */
-.btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    margin: 0 10px;
-}
-
 .btn-primary {
     background-color: var(--primary-color);
-    color: #fff;
+    border-color: var(--primary-color);
 }
 
 .btn-primary:hover {
     background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
 }
 
-.btn-danger {
-    background-color: var(--danger-color);
-    color: #fff;
+/* Tabs styling */
+.tabs {
+    margin-bottom: 1rem;
 }
 
-.btn-danger:hover {
-    background-color: var(--danger-hover-color);
+.tab-button {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
 }
 
-/* Placeholder image */
-.placeholder-image {
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 20px;
+.tab-button.active {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+.tab-button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+/* Job card styling */
+.job-card {
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.job-title {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+.job-status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.job-status.open {
+    background-color: var(--pending-color);
+    color: var(--background-color);
+}
+
+.job-status.in-progress {
+    background-color: var(--job-type-color);
+    color: var(--background-color);
+}
+
+.job-status.completed {
+    background-color: var(--accepted-color);
+    color: var(--background-color);
+}
+
+.job-description {
+    color: var(--secondary-color);
+    margin-top: 0.5rem;
+}
+
+.job-meta {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.job-date, .job-applicants {
+    color: var(--secondary-color);
+}
+
+/* Applicant section styling */
+.applicants-section {
+    margin-top: 1rem;
+}
+
+.applicants-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.applicant-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0;
+}
+
+.inline-form {
+    display: inline-block;
+}
+
+/* Action buttons styling */
+.btn-accept {
+    background-color: var(--accepted-color);
+    border-color: var(--accepted-color);
+}
+
+.btn-accept:hover {
+    background-color: darkgreen;
+    border-color: darkgreen;
+}
+
+.btn-finish, .btn-delete {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-finish:hover, .btn-delete:hover {
+    background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
 }
