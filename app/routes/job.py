@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-from ..forms import JobForm, DummyForm, RatingForm, AcceptApplicationForm
+from ..forms import JobForm, DummyForm, RatingForm, AcceptApplicationForm, PROFESSIONS, MOROCCAN_CITIES, SearchJobsForm
 from ..models import Job, User, Application, Review, JobPicture, ApplicationStatus, accepted_applicants
 from .. import db
 from datetime import datetime, timezone
@@ -66,11 +66,49 @@ def post_job():
         return redirect(url_for('job.view_jobs' ))
     return render_template('job/post_job.html', title='Post a Job', form=form)
 
-@job.route('/jobs')
-@login_required
+@job.route('/jobs', methods=['GET', 'POST'])
 def view_jobs():
-    jobs = Job.query.order_by(Job.date_posted.desc()).all()
-    return render_template('job/view_jobs.html', jobs=jobs, form=DummyForm())
+    form = SearchJobsForm()
+    
+    # Initialize variables
+    location = None
+    profession = None
+    results = None
+    
+    # Handle both POST (form submission) and GET (URL parameters) requests
+    if form.validate_on_submit() or request.method == 'GET':
+        # Get filter parameters from form or URL
+        location = form.location.data or request.args.get('location')
+        profession = form.profession.data or request.args.get('profession')
+        
+        # Query jobs based on filters
+        jobs_query = Job.query.filter(Job.status == ApplicationStatus.OPEN)
+        
+        if location and location != 'All':
+            jobs_query = jobs_query.filter(Job.location == location)
+        if profession and profession != 'All':
+            jobs_query = jobs_query.filter(Job.profession == profession)
+        
+        results = jobs_query.all()
+    
+    # If no filters applied, get all open jobs
+    if not results and location == 'All' and profession == 'All':
+        jobs = Job.query.filter(Job.status == ApplicationStatus.OPEN).all()
+    else:
+        jobs = results
+    
+    # Pre-fill form with current filter values
+    form.location.data = location
+    form.profession.data = profession
+    
+    return render_template('job/view_jobs.html',
+                           jobs=jobs,
+                           results=results,
+                           ApplicationStatus=ApplicationStatus,
+                           form=form,
+                           cities=MOROCCAN_CITIES,
+                           professions=PROFESSIONS)
+
 
 @job.route('/delete-job/<int:job_id>', methods=['POST'])
 @login_required
@@ -160,12 +198,16 @@ def job_details(job_id):
     job = Job.query.get_or_404(job_id)
     applications = Application.query.filter_by(job_id=job_id).all()
     form = AcceptApplicationForm()
+
     
-    return render_template('job/job_details.html', 
-                           job=job, 
-                           applications=applications, 
+    
+    return render_template('job/job_details.html',
+                           job=job,
+                           applications=applications,
                            form=form,
                            ApplicationStatus=ApplicationStatus)
+    
+    
     
 @job.route('/accept-application/<int:job_id>/<int:application_id>', methods=['POST'])
 @login_required

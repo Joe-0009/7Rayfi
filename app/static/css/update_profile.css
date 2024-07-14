@@ -1,13 +1,4 @@
 /* Background for the update profile section */
-:root {
-    --primary-color: #f33f3f;
-    --primary-dark: #d63030;
-    --primary-light: #ff6b6b;
-    --secondary-color: #333333;
-    --background-light: #f8f8f8;
-    --text-color: #333333;
-    --border-color: #e0e0e0;
-}
 
 
 .update-profile-background {
@@ -29,7 +20,7 @@
     padding: 30px;
     background-color: rgba(255, 255, 255, 0.9); /* More opaque background for better readability */
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .update-profile-form {

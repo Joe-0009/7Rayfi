@@ -1,12 +1,4 @@
-:root {
-    --primary-color: #f33f3f;
-    --primary-dark: #d63030;
-    --primary-light: #ff6b6b;
-    --secondary-color: #333333;
-    --background-light: #f8f8f8;
-    --text-color: #333333;
-    --border-color: #e0e0e0;
-}
+
 
 /* Main container for the job posting page */
 .post-job-container {
@@ -82,7 +74,7 @@
 .form-control {
     border: 2px solid var(--border-color);
     border-radius: 4px;
-    padding: 0.75rem;
+    padding: 0.5rem;
     transition: all 0.3s ease;
 }
 

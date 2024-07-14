@@ -2,15 +2,15 @@
 
 /* Define CSS variables for color themes */
 :root {
-    --primary-color: #f33f3f; /* Red color used for active links and highlights */
-    --primary-hover-color: #e32e2e; /* Darker red for hover effects */
-    --secondary-color: #333333; /* Dark grey color used for text and secondary elements */
+    --primary-color: #e67935; /* Orange color from the provided image */
+    --primary-hover-color: #c65b2c; /* Darker shade of orange for hover effects */
+    --secondary-color: #2c2c2c; /* Dark Blue/Black color from the provided image */
     --background-color: #ffffff; /* White color used for the background of the navbar and other elements */
     --border-color: #eaeaea; /* Light grey color used for borders and dividers */
     --rating-color: #ffcc00; /* Yellow color for rating stars */
-    --job-type-color: #f33f3f; /* Red color for job type */
-    --accepted-color: green; /* Green color for accepted status */
-    --rejected-color: red; /* Red color for rejected status */
+    --job-type-color: #e67935; /* Orange color for job type */
+    --accepted-color: #28a745; /* Green color for accepted status */
+    --rejected-color: #e7abb1; /* Red color for rejected status */
     --pending-color: #333333; /* Dark grey color for pending status */
 }
 

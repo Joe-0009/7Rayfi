@@ -1,0 +1,134 @@
+/* job_details.css */
+
+
+.job-detail-card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.job-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.status-badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-badge {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.job-description {
+    font-size: 1.1rem;
+    color: #34495e;
+    margin-bottom: 20px;
+}
+
+.job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.meta-item {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.no-pictures {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+/* Job Pictures */
+.job-pictures {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.job-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.job-image:hover {
+    transform: scale(1.05);
+}
+
+.applications-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.application-item {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.applicant-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.applicant-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0 0 0 15px;
+}
+
+.btn-accept {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.no-applications {
+    font-style: italic;
+    color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+    .job-title {
+        font-size: 2rem;
+    }
+
+    .job-meta {
+        flex-direction: column;
+    }
+
+    .application-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-accept {
+        margin-top: 10px;
+    }
+}

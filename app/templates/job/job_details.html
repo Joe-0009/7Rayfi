@@ -1,55 +1,68 @@
-{% extends "base.html" %}
-{% block title %}Job Details{% endblock %}
-{% block content %}
-<div class="container mt-4">
-    <div class="card job-card">
+
+<div class="container mt-5">
+    <div class="card job-detail-card">
         <div class="card-body">
-            <h5 class="card-title">{{ job.title }}</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="job-title">{{ job.title }}</h1>
+                <span class="status-badge ">{{ job.status.value }}</span>
+            </div>
+            <hr class="title-divider">
             <p class="job-description">{{ job.description }}</p>
-            <p><small>Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small></p>
-            <p><small>Budget: {{ job.budget }}</small></p>
-            <p><small>Expected Duration: {{ job.expected_duration }}</small></p>
-            <p><small>Required Skills: {{ job.required_skills }}</small></p>
-            <div class="job-status">
-                <span class="badge badge-{{ job.status.name|lower }}">{{ job.status.value }}</span>
+            
+            <div class="job-meta">
+                <p class="meta-item">Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</p>
+                <p class="meta-item">Budget: {{ job.budget }}</p>
+                <p class="meta-item">Expected Duration: {{ job.expected_duration }}</p>
+                <p class="meta-item">Required Skills: {{ job.required_skills }}</p>
             </div>
-            <div class="job-pictures">
+
+            <div class="job-pictures mt-3">
                 {% if job.pictures %}
+                <div class="d-flex flex-wrap">
                     {% for picture in job.pictures %}
-                        <img src="{{ url_for('static', filename='uploads/' + picture.filename) }}" alt="Job Picture" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    <img src="{{ url_for('static', filename='uploads/' + picture.filename) }}" alt="Job Picture" class="job-image mr-2 mb-2" onclick="showImageModal('{{ url_for('static', filename='uploads/' + picture.filename) }}')">
                     {% endfor %}
+                </div>
+                {% else %}
+                <p class="no-pictures">No pictures available</p>
                 {% endif %}
             </div>
-            <h6 class="mt-4">Applications</h6>
-            <ul class="list-group" id="applicant">
+
+            <h2 class="applications-title mt-5">Applications</h2>
+            <div class="applications-list">
                 {% for application in applications %}
-                    <li class="list-group-item" id="applicant">
-                        <div class="application-header">
-                            <img src="{{ url_for('static', filename='profile_pics/' + (application.applicant.profile_picture or 'default.png')) }}" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px;">
-                            <a href="{{ url_for('profile.view_profile', user_id=application.worker_id) }}">{{ application.applicant.first_name }} {{ application.applicant.last_name }}</a>
-                            <p>{{ application.applicant.brief_description }}</p>
-                            {% if job.status == ApplicationStatus.OPEN %}
-                                <form method="POST" action="{{ url_for('job.accept_application', job_id=job.id, application_id=application.id) }}" class="d-inline">
-                                    {{ form.hidden_tag() }}
-                                    {{ form.submit(class="btn btn-success") }}
-                                </form>
-                            {% endif %}
-                        </div>
-                    </li>
+                <div class="application-item">
+                    <div class="applicant-info d-flex align-items-center">
+                        <img src="{{ url_for('static', filename='profile_pics/' + (application.applicant.profile_picture or 'default.png')) }}" alt="Profile Picture" class="applicant-image">
+                        <h3 class="applicant-name ml-3">{{ application.applicant.first_name }} {{ application.applicant.last_name }}</h3>
+                    </div>
+                    {% if job.status == ApplicationStatus.OPEN %}
+                    <form method="POST" action="{{ url_for('job.accept_application', job_id=job.id, application_id=application.id) }}" class="mt-2">
+                        {{ form.hidden_tag() }}
+                        <button type="submit" class="btn btn-accept">ACCEPT</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% else %}
+                <p class="no-applications">No applications yet</p>
                 {% endfor %}
-                {% if not applications %}
-                    <li class="list-group-item">No applications yet</li>
-                {% endif %}
-            </ul>
-            {% if job.status == ApplicationStatus.IN_PROGRESS %}
-                <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}">
-                    {{ form.hidden_tag() }}
-                    <button type="submit" class="btn btn-primary mt-3">Finish Job</button>
-                </form>
-            {% elif job.status == ApplicationStatus.COMPLETED and not job.reviews %}
-                <a href="{{ url_for('job.rate_job', job_id=job.id) }}" class="btn btn-primary mt-3">Rate Job</a>
-            {% endif %}
+            </div>
+    
         </div>
     </div>
 </div>
-{% endblock %}
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Job Picture</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body text-center">
+        <img id="modalImage" src="" alt="Job Picture" class="img-fluid">
+        </div>
+    </div>
+    </div>
+</div>

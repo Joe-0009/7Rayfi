@@ -1,90 +1,150 @@
 {% extends "base.html" %}
 {% block title %}View Jobs{% endblock %}
 {% block content %}
-<div class="container mt-4 view-jobs-container">
-    <h2 class="text-center mb-4">Available Jobs</h2>
-    <div class="row">
-        {% for job in jobs %}
-        <div class="col-md-6 mb-4">
-            <div class="card job-card">
-                <div class="card-body">
-                    <div class="job-header d-flex justify-content-between align-items-center">
-                        <div class="job-date">
-                            <i class="fa fa-calendar"></i> {{ job.date_posted.strftime('%Y-%m-%d %H:%M') }}
+<div class="search-job-container">
+    <div class="search-job-overlay"></div>
+    <div class="search-job-content">
+        <h1>SEARCH FOR THE RIGHT JOB</h1>
+        <form method="GET" action="{{ url_for('job.view_jobs') }}" class="search-job-form" id="search-job-form">
+            {{ form.hidden_tag() }}
+            <div class="search-job-inputs">
+                {{ form.profession(class="form-control") }}
+                {{ form.location(class="form-control") }}
+                {{ form.submit(class="search-job-btn", value="SEARCH") }}
+            </div>
+        </form>
+    </div>
+    <div class="search-job-indicators">
+        <span class="indicator active"></span>
+        <span class="indicator"></span>
+        <span class="indicator"></span>
+    </div>
+    <div class="loading-spinner" id="loading-spinner" style="display: none;">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
+</div>
+
+<div class="view-jobs-container">
+    <h2 class="page-title">Available Jobs</h2>
+    <div class="job-cards-grid">
+        {% set displayed_jobs = results if results is defined else jobs %}
+        {% for job in displayed_jobs %}
+            {% if job.status == ApplicationStatus.OPEN %}
+                <div class="job-card">
+                    <div class="job-card-header">
+                        <h3 class="job-title">{{ job.title }}</h3>
+                        <span class="status-badge profession-{{ job.profession|lower|replace(' ', '-') }}">{{ job.profession }}</span>
+                    </div>
+                    <hr class="title-divider">
+                    <div class="job-card-content">
+                        <p class="job-description">{{ job.description[:100] }}{% if job.description|length > 100 %}...{% endif %}</p>
+                        <div class="job-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">City:</span>
+                                <span class="meta-value">{{ job.location }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Budget:</span>
+                                <span class="meta-value">{{ job.budget }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Expected Duration:</span>
+                                <span class="meta-value">{{ job.expected_duration }}</span>
+                            </div>
                         </div>
-                        <span class="badge {% if job.status.value == 'Open' %}badge-success{% else %}badge-secondary{% endif %}">{{ job.status.value }}</span>
                     </div>
-                    <h5 class="card-title mt-2">{{ job.title }}</h5>
-                    <p class="card-text">{{ job.description }}</p>
-                    <p class="poster-info"><small><i class="fa fa-user"></i> Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</small></p>
-                    <div class="job-pictures mb-3">
-                        {% if job.pictures %}
-                            <div class="d-flex flex-wrap">
-                                {% for picture in job.pictures %}
-                                    <img src="{{ url_for('static', filename='uploads/' + picture.filename) }}" alt="Job Picture" class="img-thumbnail job-image mr-2 mb-2" onclick="showImageModal('{{ url_for('static', filename='uploads/' + picture.filename) }}')">
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="text-muted"><i class="fa fa-image"></i> No pictures available</p>
-                        {% endif %}
-                    </div>
-                    <div class="job-actions mt-3 d-flex justify-content-between">
-                        {% if job.poster_id == current_user.id %}
-                            <div>
-                                <form method="POST" action="{{ url_for('job.delete_job', job_id=job.id) }}" class="d-inline">
-                                    {{ form.hidden_tag() }}
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this job?')"><i class="fa fa-trash"></i> Delete</button>
-                                </form>
-                                {% if job.status.value == 'Open' %}
-                                <form method="POST" action="{{ url_for('job.finish_job', job_id=job.id) }}" class="d-inline">
-                                    {{ form.hidden_tag() }}
-                                    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to mark this job as finished?')"><i class="fa fa-check"></i> See Applicants</button>
-                                </form>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            {% if job.status.value == 'Open' and current_user not in job.applicants %}
-                            <form method="POST" action="{{ url_for('job.apply_job', job_id=job.id) }}" class="d-inline">
-                                {{ form.hidden_tag() }}
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Apply</button>
-                            </form>
-                            {% elif current_user in job.applicants %}
-                            <p class="text-success"><i class="fa fa-check-circle"></i> You have applied for this job</p>
-                            {% endif %}
-                        {% endif %}
+                    <div class="job-card-footer">
+                        <button class="button-62" role="button" onclick="openJobModal('{{ job.id }}')">View Details</button>
+                        <span class="post-date">{{ job.date_posted.strftime('%B %d, %Y') }}</span>
                     </div>
                 </div>
+            {% endif %}
+        {% else %}
+            <p>No jobs found matching your criteria. Please try a different search.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Job Details Modal -->
+<div class="modal fade" id="jobModal" tabindex="-1" aria-labelledby="jobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobModalLabel">Job Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="jobModalContent">
+                <!-- Content will be loaded here via AJAX -->
             </div>
         </div>
-        {% endfor %}
     </div>
 </div>
 
 <!-- Image Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="imageModalLabel">Job Picture</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body text-center">
-        <img id="modalImage" src="" alt="Job Picture" class="img-fluid">
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Job Picture</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="" id="modalImage" class="img-fluid">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript">
+<script>
+    async function openJobModal(jobId) {
+        try {
+            const response = await fetch(`/job_details_content/${jobId}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const html = await response.text();
+            document.getElementById('jobModalContent').innerHTML = html;
+            $('#jobModal').modal('show');
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('jobModalContent').innerHTML = '<p>Error loading job details. Please try again.</p>';
+            $('#jobModal').modal('show');
+        }
+    }
+
     function showImageModal(imageSrc) {
         document.getElementById('modalImage').src = imageSrc;
         $('#imageModal').modal('show');
     }
+
+    document.getElementById('search-job-form').addEventListener('submit', () => {
+        document.getElementById('loading-spinner').style.display = 'block';
+    });
+
+    const backgrounds = [
+        'url("/static/images/job_search.jpg")',
+        'url("/static/images/job_search1.jpg")',
+        'url("/static/images/job_search2.jpg")',
+        'url("/static/images/job_search3.jpg")'
+    ];
+    let currentBg = 0;
+
+    function changeBackground() {
+        currentBg = (currentBg + 1) % backgrounds.length;
+        document.querySelector('.search-job-container').style.backgroundImage = backgrounds[currentBg];
+        document.querySelectorAll('.indicator').forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentBg);
+        });
+    }
+
+    setInterval(changeBackground, 5000);
 </script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}

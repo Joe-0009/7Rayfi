@@ -7,7 +7,7 @@ from flask_wtf.file import FileAllowed
 from datetime import datetime
 
 # List of Moroccan cities
-MOROCCAN_CITIES = [
+MOROCCAN_CITIES = [('All', 'All Cities')] + [
     ('Casablanca', 'Casablanca'),
     ('Rabat', 'Rabat'),
     ('Marrakech', 'Marrakech'),
@@ -21,7 +21,7 @@ MOROCCAN_CITIES = [
 ]
 
 # List of professions
-PROFESSIONS = [
+PROFESSIONS = [('All', 'All Professions')] + [
     ('Electrician', 'Electrician'),
     ('Barber', 'Barber'),
     ('Tailor', 'Tailor'),
@@ -40,9 +40,8 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=50)])
     password1 = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
     password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password1')])
-    first_name = StringField('First Name')  # Add this line
-    last_name = StringField('Last Name')    # Add this line
-    submit = SubmitField('Sign Up')
+    first_name = StringField('First Name')  
+    last_name = StringField('Last Name')    
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
@@ -73,8 +72,13 @@ class UpdateProfileForm(FlaskForm):
     profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Update Profile')
 
-# Job Form
-# forms.py
+# search jobs form
+class SearchJobsForm(FlaskForm):
+    location = SelectField('Location', choices=MOROCCAN_CITIES, validators=[DataRequired()])
+    profession = SelectField('Profession', choices=PROFESSIONS, validators=[DataRequired()])
+    submit = SubmitField('Search')
+    
+# Post Job Form
 class JobForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired(message="Title is required."), Length(min=2, max=100)])
     description = TextAreaField('Job Description', validators=[DataRequired(message="Description is required."), Length(min=10)])
