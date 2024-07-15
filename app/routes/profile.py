@@ -61,8 +61,13 @@ def view_profile(user_id):
     average_rating = db.session.query(func.avg(Review.rating)).filter_by(reviewee_id=user_id).scalar() or 0
     
     # Get the list of applied jobs, posted jobs, and reviews
-    applied_jobs = Application.query.filter_by(worker_id=user_id).all()
-    posted_jobs = Job.query.filter_by(poster_id=user_id).all()
+    if current_user.id == profile_user.id:    
+        posted_jobs = Job.query.filter_by(poster_id=current_user.id).order_by(Job.date_posted.desc()).all()
+        applied_jobs = Application.query.filter_by(worker_id=current_user.id).order_by(Application.date_applied.desc()).all()
+    else:
+        applied_jobs = []
+        posted_jobs = []
+    
     reviews = Review.query.filter_by(reviewee_id=user_id).all()
     
     # Render the profile template with the necessary data

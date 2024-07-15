@@ -37,7 +37,7 @@
                     </div>
                     <hr class="title-divider">
                     <div class="job-card-content">
-                        <p class="job-description">{{ job.description[:100] }}{% if job.description|length > 100 %}...{% endif %}</p>
+                        <!-- <p class="job-description">{{ job.description[:100] }}{% if job.description|length > 100 %}...{% endif %}</p>-->
                         <div class="job-meta">
                             <div class="meta-item">
                                 <span class="meta-label">City:</span>
@@ -101,50 +101,5 @@
 {% endblock %}
 
 {% block javascript %}
-<script>
-    async function openJobModal(jobId) {
-        try {
-            const response = await fetch(`/job_details_content/${jobId}`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const html = await response.text();
-            document.getElementById('jobModalContent').innerHTML = html;
-            $('#jobModal').modal('show');
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('jobModalContent').innerHTML = '<p>Error loading job details. Please try again.</p>';
-            $('#jobModal').modal('show');
-        }
-    }
-
-    function showImageModal(imageSrc) {
-        document.getElementById('modalImage').src = imageSrc;
-        $('#imageModal').modal('show');
-    }
-
-    document.getElementById('search-job-form').addEventListener('submit', () => {
-        document.getElementById('loading-spinner').style.display = 'block';
-    });
-
-    const backgrounds = [
-        'url("/static/images/job_search.jpg")',
-        'url("/static/images/job_search1.jpg")',
-        'url("/static/images/job_search2.jpg")',
-        'url("/static/images/job_search3.jpg")'
-    ];
-    let currentBg = 0;
-
-    function changeBackground() {
-        currentBg = (currentBg + 1) % backgrounds.length;
-        document.querySelector('.search-job-container').style.backgroundImage = backgrounds[currentBg];
-        document.querySelectorAll('.indicator').forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentBg);
-        });
-    }
-
-    setInterval(changeBackground, 5000);
-</script>
+<script src="{{ url_for('static', filename='js/view_jobs.js') }}"></script>
 {% endblock %}

@@ -39,6 +39,8 @@ body {
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 400px;
 }
 
 /* Hover effect for job card */
@@ -53,14 +55,16 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0;
+    border-bottom: 1px solid #eee;
 }
 
 /* Job title styling */
 .job-title {
-    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
     font-size: 1.2rem;
     color: #333;
+    margin: 0;
 }
 
 /* Status badge common styles */
@@ -104,13 +108,18 @@ body {
 /* Container for job metadata */
 .job-meta {
     display: grid;
-    gap: 0.5rem;
+    
+    align-items: baseline;
+    gap: 1rem;
+    padding: 30px;
 }
 
 /* Individual metadata item */
 .meta-item {
-    display: flex;
+    display: grid;
     justify-content: space-between;
+    grid-template-columns: auto 1fr;
+    align-items: stretch;
 }
 
 /* Label for metadata item */
@@ -122,7 +131,8 @@ body {
 /* Value for metadata item */
 .meta-value {
     color: #666;
-    margin-left: 100px;
+    text-align: right;
+
 }
 
 /* Footer section of the job card */
@@ -132,6 +142,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto;
 }
 
 
@@ -213,7 +224,7 @@ body {
 .search-job-container {
     position: relative;
     height: 500px;
-    background-image: url('/static/images/job_search3.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/static/images/job_search3.jpg');
     background-size: cover;
     background-position: center;
     transition: background-image 0.5s ease-in-out;
@@ -228,7 +239,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(171, 80, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .search-job-content {
@@ -372,16 +383,89 @@ body {
 
 /* Modal styles */
 /* Adjust modal styles if needed */
-.modal-dialog-centered {
-    display: flex;
-    align-items: center;
-    min-height: calc(100% - 1rem);
+/* Job Modal Styles */
+.modal-dialog.modal-lg {
+    max-width: 800px;
 }
 
 .modal-content {
-    border-radius: 0.5rem;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.5rem;
+}
+
+.modal-title {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.modal-header .close {
+    padding: 1rem;
+    margin: -1rem -1rem -1rem auto;
+    font-size: 2rem;
+    color: #6c757d;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
 }
 
 .modal-body {
     padding: 2rem;
+}
+
+/* Custom scrollbar for modal content */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Animation for modal opening */
+.modal.fade .modal-dialog {
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-dialog.modal-lg {
+        max-width: 95%;
+        margin: 1.75rem auto;
+    }
+
+    .modal-header {
+        padding: 1rem;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
 }

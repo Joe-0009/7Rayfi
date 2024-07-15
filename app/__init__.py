@@ -19,7 +19,8 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/profile_pics')
     app.config['UPLOAD_FOLDER2'] = os.path.join(app.root_path, 'static/uploads')
-    
+    app.config['WTF_CSRF_CHECK_DEFAULT'] = False
+    app.config['WTF_CSRF_ENABLED'] = True
     # Register Jinja2 filter
     app.jinja_env.filters['timeago'] = lambda date: timeago.format(date, datetime.utcnow())
     

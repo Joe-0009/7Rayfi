@@ -1,68 +1,67 @@
-
-<div class="container mt-5">
-    <div class="card job-detail-card">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h1 class="job-title">{{ job.title }}</h1>
-                <span class="status-badge ">{{ job.status.value }}</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job-details.css') }}">
+</head>
+<body>
+    <div class="job-detail-modal">
+        <div class="job-detail-header">
+            <h1 class="job-detail-title">{{ job.title }}</h1>
+            <span class="job-detail-status status-{{ job.status.name.lower() }}">{{ job.status.value }}</span>
+        </div>
+        <div class="job-detail-content">
+            <div class="job-detail-description {% if job.description|length > 300 %}long-description{% endif %}">
+                <h2>Description</h2>
+                <p>{{ job.description }}</p>
             </div>
-            <hr class="title-divider">
-            <p class="job-description">{{ job.description }}</p>
-            
-            <div class="job-meta">
-                <p class="meta-item">Posted by: {{ job.poster.first_name }} {{ job.poster.last_name }}</p>
-                <p class="meta-item">Budget: {{ job.budget }}</p>
-                <p class="meta-item">Expected Duration: {{ job.expected_duration }}</p>
-                <p class="meta-item">Required Skills: {{ job.required_skills }}</p>
+            <div class="job-detail-key-info">
+                <div class="key-info-item">
+                    <h4>Budget</h4>
+                    <p>{{ job.budget }}</p>
+                </div>
+                <div class="key-info-item">
+                    <h4>Expected Duration</h4>
+                    <p>{{ job.expected_duration }}</p>
+                </div>
             </div>
-
-            <div class="job-pictures mt-3">
-                {% if job.pictures %}
-                <div class="d-flex flex-wrap">
+            <div class="job-detail-meta">
+                <p><strong>Profession:</strong> <span>{{ job.profession }}</span></p>
+                <p><strong>Location:</strong> <span>{{ job.location }}</span></p>
+                <p><strong>Required Skills:</strong> <span>{{ job.required_skills }}</span></p>
+                <p><strong>Posted by:</strong> <span>{{ job.posted_by }}</span></p>
+                <p><strong>Date Posted:</strong> <span>{{ job.date_posted }}</span></p>
+            </div>
+            {% if job.pictures %}
+            <div class="job-detail-pictures">
+                <h2>Job Gallery</h2>
+                <div class="job-detail-gallery">
                     {% for picture in job.pictures %}
-                    <img src="{{ url_for('static', filename='uploads/' + picture.filename) }}" alt="Job Picture" class="job-image mr-2 mb-2" onclick="showImageModal('{{ url_for('static', filename='uploads/' + picture.filename) }}')">
+                    <img src="{{ url_for('static', filename='uploads/' + picture.filename) }}" alt="Job Picture" class="job-detail-image" onclick="showImageModal('{{ url_for('static', filename='uploads/' + picture.filename) }}')">
                     {% endfor %}
                 </div>
-                {% else %}
-                <p class="no-pictures">No pictures available</p>
-                {% endif %}
             </div>
-
-            <h2 class="applications-title mt-5">Applications</h2>
-            <div class="applications-list">
-                {% for application in applications %}
-                <div class="application-item">
-                    <div class="applicant-info d-flex align-items-center">
-                        <img src="{{ url_for('static', filename='profile_pics/' + (application.applicant.profile_picture or 'default.png')) }}" alt="Profile Picture" class="applicant-image">
-                        <h3 class="applicant-name ml-3">{{ application.applicant.first_name }} {{ application.applicant.last_name }}</h3>
-                    </div>
-                    {% if job.status == ApplicationStatus.OPEN %}
-                    <form method="POST" action="{{ url_for('job.accept_application', job_id=job.id, application_id=application.id) }}" class="mt-2">
-                        {{ form.hidden_tag() }}
-                        <button type="submit" class="btn btn-accept">ACCEPT</button>
-                    </form>
-                    {% endif %}
-                </div>
-                {% else %}
-                <p class="no-applications">No applications yet</p>
-                {% endfor %}
-            </div>
+            {% endif %}
+            {% if job.status.value == 'Open' and current_user not in job.applicants %}
+            <form method="POST" action="{{ url_for('job.apply_job', job_id=job.id) }}" class="d-inline">
+                {{ form.hidden_tag() }}
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-paper-plane"></i> Apply
+                </button>
+            </form>
+            {% elif current_user in job.applicants %}
+                <p class="text-success">
+                    <i class="fa fa-check-circle"></i> You have applied for this job
+                </p>
+            {% endif %}
+        </div>
+    </div>
     
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="imageModalLabel">Job Picture</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-        <div class="modal-body text-center">
-        <img id="modalImage" src="" alt="Job Picture" class="img-fluid">
-        </div>
-    </div>
-    </div>
-</div>
+    
+</body>
+</html>

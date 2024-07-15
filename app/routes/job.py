@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request
+from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request, jsonify
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from ..forms import JobForm, DummyForm, RatingForm, AcceptApplicationForm, PROFESSIONS, MOROCCAN_CITIES, SearchJobsForm
@@ -66,6 +66,8 @@ def post_job():
         return redirect(url_for('job.view_jobs' ))
     return render_template('job/post_job.html', title='Post a Job', form=form)
 
+
+
 @job.route('/jobs', methods=['GET', 'POST'])
 def view_jobs():
     form = SearchJobsForm()
@@ -89,11 +91,14 @@ def view_jobs():
         if profession and profession != 'All':
             jobs_query = jobs_query.filter(Job.profession == profession)
         
+        # Sort jobs by date_posted in descending order
+        jobs_query = jobs_query.order_by(Job.date_posted.desc())
+        
         results = jobs_query.all()
     
-    # If no filters applied, get all open jobs
+    # If no filters applied, get all open jobs sorted by date
     if not results and location == 'All' and profession == 'All':
-        jobs = Job.query.filter(Job.status == ApplicationStatus.OPEN).all()
+        jobs = Job.query.filter(Job.status == ApplicationStatus.OPEN).order_by(Job.date_posted.desc()).all()
     else:
         jobs = results
     
@@ -110,6 +115,7 @@ def view_jobs():
                            professions=PROFESSIONS)
 
 
+
 @job.route('/delete-job/<int:job_id>', methods=['POST'])
 @login_required
 def delete_job(job_id):
@@ -118,9 +124,22 @@ def delete_job(job_id):
         flash('You do not have permission to delete this job', 'danger')
         return redirect(url_for('job.view_jobs'))
     
-    db.session.delete(job)
-    db.session.commit()
-    flash('Job deleted successfully!', 'success')
+    try:
+        # Delete associated reviews
+        Review.query.filter_by(job_id=job_id).delete()
+        
+        # Delete associated applications
+        Application.query.filter_by(job_id=job_id).delete()
+        
+        # Delete the job
+        db.session.delete(job)
+        db.session.commit()
+        flash('Job deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting job: {str(e)}")
+        flash('An error occurred while deleting the job.', 'danger')
+    
     return redirect(url_for('job.view_jobs'))
 
 @job.route('/apply-job/<int:job_id>', methods=['POST'])
@@ -195,44 +214,73 @@ def rate_job(job_id):
 @job.route('/job_details/<int:job_id>', methods=['GET'])
 @login_required
 def job_details(job_id):
-    job = Job.query.get_or_404(job_id)
-    applications = Application.query.filter_by(job_id=job_id).all()
-    form = AcceptApplicationForm()
+    try:
+        job = Job.query.get_or_404(job_id)
+        applications = Application.query.filter_by(job_id=job_id).order_by(Application.date_applied.desc()).all()
+        form = AcceptApplicationForm()
+        
+        return render_template('job/job_details.html',
+                               job=job,
+                               applications=applications,
+                               form=form,
+                               ApplicationStatus=ApplicationStatus)
+    except Exception as e:
+        current_app.logger.error(f"Error in job_details: {str(e)}")
+        return "An error occurred while loading job details.", 500
+    
+    
 
-    
-    
-    return render_template('job/job_details.html',
-                           job=job,
-                           applications=applications,
-                           form=form,
-                           ApplicationStatus=ApplicationStatus)
-    
-    
-    
+
 @job.route('/accept-application/<int:job_id>/<int:application_id>', methods=['POST'])
 @login_required
 def accept_application(job_id, application_id):
     job = Job.query.get_or_404(job_id)
     application = Application.query.get_or_404(application_id)
-    
+
     if job.poster_id != current_user.id:
         flash('You are not authorized to accept applications for this job.', 'error')
-        return redirect(url_for('job.job_details', job_id=job_id))
+        return redirect(url_for('profile.view_profile', user_id=current_user.id))
 
     if application.job_id != job_id:
         flash('This application does not belong to this job.', 'error')
-        return redirect(url_for('job.job_details', job_id=job_id))
+        return redirect(url_for('profile.view_profile', user_id=current_user.id))
 
-    if job.status != ApplicationStatus.OPEN:
-        flash('This job is not open for applications.', 'error')
-        return redirect(url_for('job.job_details', job_id=job_id))
-    
+    if application.status == ApplicationStatus.ACCEPTED:
+        flash('This application has already been accepted.', 'info')
+        return redirect(url_for('profile.view_profile', user_id=current_user.id))
+
     application.status = ApplicationStatus.ACCEPTED
     job.status = ApplicationStatus.IN_PROGRESS
+
+    # Reject all other applications for this job
+    for other_application in job.applications:
+        if other_application.id != application.id:
+            other_application.status = ApplicationStatus.REJECTED
+
     db.session.commit()
-    
+
     flash('Application accepted successfully!', 'success')
+    return redirect(url_for('profile.view_profile', user_id=current_user.id))
+
+
+
+
+@job.route('/reject-application/<int:job_id>/<int:application_id>', methods=['POST'])
+@login_required
+def reject_application(job_id, application_id):
+    job = Job.query.get_or_404(job_id)
+    application = Application.query.get_or_404(application_id)
+
+    if job.poster_id != current_user.id:
+        flash('You do not have permission to reject this application.', 'danger')
+        return redirect(url_for('job.job_details', job_id=job_id))
+
+    if application.job_id != job_id:
+        flash('Invalid application for this job.', 'danger')
+        return redirect(url_for('job.job_details', job_id=job_id))
+
+    application.status = ApplicationStatus.REJECTED
+    db.session.commit()
+
+    flash('Application has been rejected.', 'success')
     return redirect(url_for('job.job_details', job_id=job_id))
-
-
-

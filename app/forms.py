@@ -52,7 +52,7 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username already exists.')
-
+    submit = SubmitField('Sign Up')
 # Login Form
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
